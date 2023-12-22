@@ -25,7 +25,7 @@ export const Router = () => {
   return (
     <Routes>
       {routes.map(route => (
-        <Route path={route.to} element={route.element} />
+        <Route key={route.to} path={route.to} element={route.element} />
       ))}
       <Route path="*" element={<ErrorPage />} />
     </Routes>

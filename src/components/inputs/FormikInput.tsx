@@ -11,7 +11,7 @@ const formikInputVariants = cva(["placeholder:text-stone-500 relative placeholde
   variants: {
     variant: {
       unstyled: "",
-      default: `bg-white text-text-primary border-2 border-secondary focus:outline-none focus:border-orange-400`,
+      default: `bg-white text-text-primary border-2 border-blue-500 focus:outline-none focus:border-blue-800`,
       green: `bg-lime-500 text-[#f3f2f0] border-lime-600
       hover:text-white`,
       dark: `bg-gray-700 text-[#f3f2f0] border-gray-900
@@ -78,6 +78,7 @@ export const FormikInput = forwardRef<HTMLInputElement, FormikInputProps>(
           )}
           <input
             className={cn(
+              "flex w-full",
               formikInputVariants({ variant, inputSize, className }),
               error && "border-2 border-red-400 outline-none caret-red-400 focus:border-red-500",
               inputPrefix && "pl-8",

@@ -25,7 +25,7 @@ export const realButtonVariantColors = {
     "active:border-lime-500",
   ],
   blue: [
-    "bg-blue-700 text-textWhite border-blue-900",
+    "bg-blue-700 text-[#f3f2f0] border-blue-900",
     "hover:text-white",
     "active:border-blue-700",
     "dark:bg-blue-700 dark:border-blue-900 dark:active:border-blue-700",
