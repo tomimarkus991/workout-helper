@@ -1,2 +1,5 @@
 extends:
   - eslint-config-redlotus-react/dist/main
+
+rules:
+  arrow-body-style: off

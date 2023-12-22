@@ -1,38 +1,28 @@
-import clsx from "clsx";
-import { HiArchive, HiHome } from "react-icons/hi";
-
-import { AboutPage, HomePage } from "pages";
-import { ISidebarRouter, IRegularRouter } from "types";
-
-const smallIconCss = "h-8 w-8 fill-inherit";
-const bigIconCss = "mr-3 h-8 w-8 fill-inherit";
+import { CreateWorkoutPage, WorkoutsPage, NotesPage, ProfilePage } from "@/pages";
+import { IRegularRouter } from "@/types";
 
 export const definedRoutes = {
-  home: "/",
-  about: "/about",
-  random: "/random",
+  workoutsPage: "/",
+  profile: "/profile",
+  notes: "/notes",
+  createWorkout: "/create-workout",
 };
-
-export const routesWithSidebar: ISidebarRouter[] = [
-  {
-    to: definedRoutes.home,
-    routeName: "Home",
-    element: <HomePage />,
-    smallIcon: <HiHome className={clsx(smallIconCss)} />,
-    bigIcon: <HiHome className={clsx(bigIconCss)} />,
-  },
-  {
-    to: definedRoutes.about,
-    routeName: "About",
-    element: <AboutPage />,
-    smallIcon: <HiArchive className={clsx(smallIconCss)} />,
-    bigIcon: <HiArchive className={clsx(bigIconCss)} />,
-  },
-];
 
 export const routes: IRegularRouter[] = [
   {
-    to: definedRoutes.random,
-    element: <AboutPage />,
+    to: definedRoutes.workoutsPage,
+    element: <WorkoutsPage />,
+  },
+  {
+    to: definedRoutes.createWorkout,
+    element: <CreateWorkoutPage />,
+  },
+  {
+    to: definedRoutes.profile,
+    element: <ProfilePage />,
+  },
+  {
+    to: definedRoutes.notes,
+    element: <NotesPage />,
   },
 ];

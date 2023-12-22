@@ -8,7 +8,7 @@ import { createRoot } from "react-dom/client";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
 
-import { Router } from "routes";
+import { Router } from "@/routes";
 
 setDefaultOptions({ locale: et });
 
