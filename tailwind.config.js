@@ -25,9 +25,8 @@ module.exports = {
         xs2: "0.6rem",
       },
       colors: {
-        "surface-bg": "#F7F8FA",
-        "text-primary": "#393939",
-        "tab-bg":"#F6F6F8",
+        "surface": "#07142e",
+        "text-primary": "#f3f2f0",
         primary:"##1d4ed8",
         secondary:"#2d1afb",
       },
@@ -45,11 +44,11 @@ module.exports = {
       },
     },
     fontFamily: {
-      varela: ["Varela Round", "sans-serif"],
-      sans: ["Rubik", "sans-serif"],
-      baloo: ["baloo-2", "cursive"],
-      quicksand: ["Quicksand", "sans-serif"],
+      // varela: ["Varela Round", "sans-serif"],
+      primary: ["Rubik", "sans-serif"],
+      number: ["Quicksand", "sans-serif"],
       catamaran: ["Catamaran", "sans-serif"],
+      // baloo: ["baloo-2", "cursive"],
   },
     linearBorderGradients: () => ({
       colors: {

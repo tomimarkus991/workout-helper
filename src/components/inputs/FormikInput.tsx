@@ -11,7 +11,7 @@ const formikInputVariants = cva(["placeholder:text-stone-500 relative placeholde
   variants: {
     variant: {
       unstyled: "",
-      default: `bg-white text-text-primary border-2 border-blue-500 focus:outline-none focus:border-blue-800`,
+      default: `bg-white text-slate-700 border-2 border-blue-500 focus:outline-none focus:border-blue-800`,
       green: `bg-lime-500 text-[#f3f2f0] border-lime-600
       hover:text-white`,
       dark: `bg-gray-700 text-[#f3f2f0] border-gray-900

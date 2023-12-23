@@ -35,25 +35,28 @@ input[type="number"] {
     @apply scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin scrollbar-thumb-rounded-full;
   }
   body {
-    @apply bg-surface-bg;
+    @apply bg-slate-900;
   }
   p {
-    @apply text-[#393939] font-catamaran;
+    @apply text-[#f3f2f0] font-primary;
   }
   h1 {
-    @apply text-[#393939] font-catamaran;
+    @apply text-[#f3f2f0] font-primary;
   }
   span {
-    @apply text-[#393939];
+    @apply text-[#f3f2f0] font-primary;
   }
   b {
-    @apply text-[#393939];
+    @apply text-[#f3f2f0] font-primary;
   }
   li {
-    @apply text-stone-600;
+    @apply text-stone-600 font-primary;
   }
   button {
-    @apply text-[#393939];
+    @apply text-[#f3f2f0];
+  }
+  img {
+    @apply rounded-xl;
   }
 }
 
@@ -65,6 +68,13 @@ input[type="number"] {
 
   .input-error {
     @apply border-2 border-red-300 outline-none caret-red-400 focus:border-red-500;
+  }
+
+  .icon {
+    @apply cursor-pointer text-slate-100 size-10;
+  }
+  .icon-fill {
+    @apply cursor-pointer fill-slate-100 hover:fill-slate-200 size-10;
   }
 
   .scrollbar-overflow {

@@ -1,4 +1,4 @@
-import { CreateWorkoutPage, WorkoutsPage, NotesPage, ProfilePage } from "@/pages";
+import { CreateWorkoutPage, WorkoutsPage, NotesPage, ProfilePage, WorkoutPage } from "@/pages";
 import { IRegularRouter } from "@/types";
 
 export const definedRoutes = {
@@ -6,6 +6,7 @@ export const definedRoutes = {
   profile: "/profile",
   notes: "/notes",
   createWorkout: "/create-workout",
+  workoutPage: "/workout",
 };
 
 export const routes: IRegularRouter[] = [
@@ -24,5 +25,9 @@ export const routes: IRegularRouter[] = [
   {
     to: definedRoutes.notes,
     element: <NotesPage />,
+  },
+  {
+    to: `${definedRoutes.workoutPage}/:id`,
+    element: <WorkoutPage />,
   },
 ];

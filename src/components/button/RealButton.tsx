@@ -7,7 +7,7 @@ export const realButtonVariantColors = {
   red: ["text-white bg-primary border-[#b10000]", "active:border-primary"],
   orange: ["text-white bg-secondary border-[#b77515]", "active:border-secondary"],
   dark: [
-    "bg-gray-700 text-textWhite border-gray-900",
+    "bg-gray-700 text-[#f3f2f0] border-gray-900",
     "hover:text-white",
     "active:border-gray-700",
     "dark:bg-gray-700 dark:border-gray-900 dark:active:border-gray-700",
