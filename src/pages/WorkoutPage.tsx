@@ -1,4 +1,4 @@
-import { add, format } from "date-fns";
+import { add, format, setHours } from "date-fns";
 import { useEffect, useState } from "react";
 import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
 import { Link } from "react-router-dom";
@@ -18,7 +18,7 @@ export const WorkoutPage = () => {
     exercises: [
       {
         exercise: "Explosive pull-ups",
-        sets: 5,
+        sets: 3,
         reps: 8,
         rest: 180,
         order: 1,
@@ -47,8 +47,7 @@ export const WorkoutPage = () => {
       {
         exercise: "HSPU",
         sets: 5,
-        reps: 0,
-        duration: 120,
+        reps: 10,
         rest: 180,
         order: 4,
       },
@@ -70,10 +69,10 @@ export const WorkoutPage = () => {
     ],
   };
 
-  const formatTime = (totalSeconds: number) => {
-    const baseDate = new Date(0);
+  const formatTime = (totalSeconds: number, desiredFormat = "mm:ss") => {
+    const baseDate = setHours(new Date(), 0).setMinutes(0, 0, 0);
     const date = add(baseDate, { seconds: totalSeconds });
-    return format(date, "mm:ss");
+    return format(date, desiredFormat);
   };
 
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -123,12 +122,16 @@ export const WorkoutPage = () => {
 
   const handleCompleteExercise = () => {
     if (currentSet < currentExercise.sets) {
+      setIsResting(true);
       setCurrentSet(currentSet + 1);
-      if (currentExercise.rest) {
-        setIsResting(true);
-        setTimeout(() => setIsResting(false), currentExercise.rest * 1000);
-      }
+      setTimeout(() => {
+        setIsResting(false);
+      }, currentExercise.rest * 1000);
+
+      // go to next exercise
     } else {
+      console.log("next exercise");
+
       if (currentExercise.rest) {
         setIsResting(true);
         setTimeout(() => setIsResting(false), currentExercise.rest * 1000);
@@ -148,7 +151,7 @@ export const WorkoutPage = () => {
     return (
       <div className="mt-40 text-center">
         <p className="text-2xl">Workout Complete</p>
-        <p className="text-2xl">Time: {formatTime(totalWorkoutTime)}</p>
+        <p className="text-2xl">Time: {formatTime(totalWorkoutTime, "HH:mm:ss")}</p>
       </div>
     );
   }
@@ -159,7 +162,9 @@ export const WorkoutPage = () => {
         <Link to={definedRoutes.workoutsPage}>
           <HiX className="icon" />
         </Link>
-        <p className="mx-auto text-xl font-semibold font-number">{formatTime(totalWorkoutTime)}</p>
+        <p className="mx-auto text-xl font-semibold font-number">
+          {formatTime(totalWorkoutTime, "HH:mm:ss")}
+        </p>
         <div className="flex items-center space-x-2">
           {true ? <HiOutlineVolumeUp className="icon" /> : <HiOutlineVolumeOff className="icon" />}
         </div>
@@ -167,21 +172,20 @@ export const WorkoutPage = () => {
 
       <div className="p-4">
         <div className="relative text-center">
-          <img
-            alt="Exercise"
-            className="w-full h-[200px] relative"
-            src="/general/placeholder.svg"
-            style={{
-              aspectRatio: "355/200",
-              objectFit: "cover",
-            }}
-          />
+          {!isResting && (
+            <img
+              alt="Exercise"
+              className="w-full h-[200px] relative"
+              src="/general/placeholder.svg"
+              style={{
+                aspectRatio: "355/200",
+                objectFit: "cover",
+              }}
+            />
+          )}
+
           {isResting && (
-            <div className="bg-white bg-opacity-70 absolute top-[37%] left-[37.5%] p-2 rounded-xl">
-              <p className="z-10 text-3xl font-bold text-slate-800 font-number">
-                {formatTime(restCountdown)}
-              </p>
-            </div>
+            <p className="mt-32 text-5xl font-bold font-number">{formatTime(restCountdown)}</p>
           )}
           {currentExercise.duration && (
             <div className="bg-white bg-opacity-70 absolute top-[5%] left-[2%] p-2 rounded-xl">
@@ -200,6 +204,9 @@ export const WorkoutPage = () => {
               <p className="text-2xl font-bold">{currentExercise.reps} reps</p>
             )}
             <p className="text-xl font-semibold">{currentExercise.exercise}</p>
+            <p className="mt-5 text-3xl font-semibold">
+              Set {currentSet + currentExercise.sets - currentExercise.sets}
+            </p>
           </div>
         )}
       </div>
@@ -219,11 +226,9 @@ export const WorkoutPage = () => {
             <div className="ml-4">
               <p className="text-lg font-semibold">{currentExercise.exercise}</p>
               <p className="text-sm text-gray-600">
-                {currentExercise.sets - currentSet} sets remaining |{" "}
-                {currentExercise.reps === 0
-                  ? `${currentExercise.duration} seconds`
-                  : `${currentExercise.reps} reps each`}{" "}
-                | with {currentExercise.rest}s of rest between sets
+                {isResting
+                  ? `Next up set ${currentSet + 1}`
+                  : `After this ${currentExercise.sets - currentSet} sets left`}
               </p>
             </div>
           </div>
@@ -239,26 +244,28 @@ export const WorkoutPage = () => {
             />
             <div className="ml-4">
               <p className="text-lg font-semibold">{nextExercise.exercise}</p>
-              <p className="text-sm text-gray-600">
-                {nextExercise.sets} sets |{" "}
-                {nextExercise.reps === 0
-                  ? `${nextExercise.duration} seconds`
-                  : `${nextExercise.reps} reps each`}{" "}
-                | with {nextExercise.rest}s of rest between sets
-              </p>
+              <p className="text-sm text-gray-600">{nextExercise.sets} sets</p>
             </div>
           </div>
         )}
 
         {isResting ? (
           <div className="flex flex-row justify-between mt-4">
-            <RealButton className="px-2 w-14" variant="blue">
+            <RealButton
+              className="px-2 w-14"
+              variant="blue"
+              onClick={() => setRestCountdown(prev => prev - 10)}
+            >
               -10
             </RealButton>
             <RealButton variant="blue" onClick={() => setIsResting(false)}>
               Skip rest
             </RealButton>
-            <RealButton className="px-2 w-14" variant="blue">
+            <RealButton
+              className="px-2 w-14"
+              variant="blue"
+              onClick={() => setRestCountdown(prev => prev + 10)}
+            >
               +10
             </RealButton>
           </div>
