@@ -2,7 +2,9 @@ import { FiPlusCircle } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 import { Workout } from "@/app-constants";
-import { NavbarBottom, WorkoutCard } from "@/components";
+import { NavbarBottom, RealButton, WorkoutCard } from "@/components";
+import { useSession } from "@/hooks";
+import { definedRoutes } from "@/routes";
 
 const workouts = () => {
   const _workouts: Workout[] = [];
@@ -27,32 +29,49 @@ const workouts = () => {
   return _workouts;
 };
 
-console.log(workouts()[0]);
+export const WorkoutsPage = () => {
+  const { data } = useSession();
 
-export const WorkoutsPage = () => (
-  <div className="mt-5 mb-24">
-    {workouts().length !== 0 ? (
-      <div className="mx-4">
-        {workouts().map(workout => (
-          <WorkoutCard
-            id={workout.id}
-            name={workout.name}
-            image={workout.image}
-            averageCompletionTime={workout.averageCompletionTime}
-          />
-        ))}
-        <Link to="/create-workout">
-          <FiPlusCircle className="mx-auto mt-2 cursor-pointer icon size-14" />
+  if (!data?.user) {
+    return (
+      <div className="flex flex-col items-center justify-center mt-40">
+        <p className="mb-6 text-5xl font-bold">CaliWiz</p>
+        <Link to={definedRoutes.login}>
+          <RealButton variant="blue1">Login</RealButton>
+        </Link>
+        <Link to={definedRoutes.register}>
+          <RealButton className="mt-4" variant="blue2">
+            Register
+          </RealButton>
         </Link>
       </div>
-    ) : (
-      <div className="flex items-center justify-center mt-40">
-        <Link to="/create-workout">
-          <FiPlusCircle className="cursor-pointer icon size-20" />
-        </Link>
-      </div>
-    )}
+    );
+  }
+  return (
+    <div className="mt-5 mb-24">
+      {workouts().length !== 0 ? (
+        <div className="mx-4">
+          {workouts().map(workout => (
+            <WorkoutCard
+              id={workout.id}
+              name={workout.name}
+              image={workout.image}
+              averageCompletionTime={workout.averageCompletionTime}
+            />
+          ))}
+          <Link to="/create-workout">
+            <FiPlusCircle className="mx-auto mt-2 cursor-pointer icon size-14" />
+          </Link>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center mt-40">
+          <Link to="/create-workout">
+            <FiPlusCircle className="cursor-pointer icon size-20" />
+          </Link>
+        </div>
+      )}
 
-    <NavbarBottom />
-  </div>
-);
+      <NavbarBottom />
+    </div>
+  );
+};

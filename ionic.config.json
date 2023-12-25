@@ -1,0 +1,7 @@
+{
+  "name": "caliwiz",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

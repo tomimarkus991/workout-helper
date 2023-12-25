@@ -28,9 +28,27 @@ const CreateWorkout = yup.object().shape({
   exercises: yup.array().of(CreateExercise).default([]).required("Exercises are required"),
 });
 
+const Login = yup.object().shape({
+  email: yup.string().email().required("Required"),
+  password: yup.string().required("Required"),
+});
+const Register = yup.object().shape({
+  username: yup.string().min(3, "Username must be at least 3 characters long").required("Required"),
+  email: yup.string().email().required("Required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters long")
+    .matches(/[a-zA-Z0-9]/, "Password can only contain Latin letters or numbers")
+    .required("Required"),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .required("Required"),
+});
+
 export type CreateWorkoutFormValues = yup.InferType<typeof CreateWorkout>;
 export type Workout = yup.InferType<typeof CreateWorkout> & { id: string; duration: number };
 export type ExerciseFormValues = yup.InferType<typeof CreateExercise>;
 export type Exercise = yup.InferType<typeof CreateExercise> & { id: string };
 
-export const YupSchemas = { CreateWorkout, CreateExercise };
+export const YupSchemas = { CreateWorkout, CreateExercise, Login, Register };

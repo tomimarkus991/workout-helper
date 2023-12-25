@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
 import { ErrorPage } from "@/pages";
-import { routes } from "@/routes";
+import { PrivateLayoutRoutes, privateRoutes, routes } from "@/routes";
 
 const useRegisterPWA = () => {
   const intervalMS = 60 * 60 * 1000; // 1 hour
@@ -27,6 +27,11 @@ export const Router = () => {
       {routes.map(route => (
         <Route key={route.to} path={route.to} element={route.element} />
       ))}
+      <Route element={<PrivateLayoutRoutes />}>
+        {privateRoutes.map(route => (
+          <Route key={route.to} path={route.to} element={route.element} />
+        ))}
+      </Route>
       <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
