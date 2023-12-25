@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 import { supabase } from "utils";
 
@@ -21,7 +21,7 @@ export const useSignOut = () => {
     mutationFn: () => signOut(),
     onSuccess: () => {
       queryClient.removeQueries();
-      navigate("/");
+      navigate({ to: "/" });
     },
   });
 };

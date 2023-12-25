@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 import { UserType } from "@/types";
 import { supabase } from "@/utils";
@@ -17,7 +17,7 @@ export const useUser = () => {
   const getQuery = async () => {
     const user = getUserId().then(async id => {
       if (!id) {
-        navigate("/");
+        navigate({ to: "/" });
         return null;
       }
       const { data: _data, error } = await supabase

@@ -1,11 +1,10 @@
+import { Link } from "@tanstack/react-router";
 import { add, format, setHours } from "date-fns";
 import { useEffect, useState } from "react";
 import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
-import { Link } from "react-router-dom";
 
 import { Workout } from "@/app-constants";
 import { RealButton } from "@/components";
-import { definedRoutes } from "@/routes";
 
 export const WorkoutPage = () => {
   const workout: Workout = {
@@ -159,7 +158,7 @@ export const WorkoutPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex items-center justify-between p-4">
-        <Link to={definedRoutes.workoutsPage}>
+        <Link to="/">
           <HiX className="icon" />
         </Link>
         <p className="mx-auto text-xl font-semibold font-number">

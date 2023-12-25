@@ -1,10 +1,9 @@
+import { Link } from "@tanstack/react-router";
 import { FiPlusCircle } from "react-icons/fi";
-import { Link } from "react-router-dom";
 
 import { Workout } from "@/app-constants";
 import { NavbarBottom, RealButton, WorkoutCard } from "@/components";
 import { useSession } from "@/hooks";
-import { definedRoutes } from "@/routes";
 
 const workouts = () => {
   const _workouts: Workout[] = [];
@@ -36,10 +35,10 @@ export const WorkoutsPage = () => {
     return (
       <div className="flex flex-col items-center justify-center mt-40">
         <p className="mb-6 text-5xl font-bold">CaliWiz</p>
-        <Link to={definedRoutes.login}>
+        <Link to="/login">
           <RealButton variant="blue1">Login</RealButton>
         </Link>
-        <Link to={definedRoutes.register}>
+        <Link to="/register">
           <RealButton className="mt-4" variant="blue2">
             Register
           </RealButton>
@@ -48,11 +47,12 @@ export const WorkoutsPage = () => {
     );
   }
   return (
-    <div className="mt-5 mb-24">
+    <div className="mt-5 mb-24 max-w-md">
       {workouts().length !== 0 ? (
         <div className="mx-4">
           {workouts().map(workout => (
             <WorkoutCard
+              key={workout.id}
               id={workout.id}
               name={workout.name}
               image={workout.image}

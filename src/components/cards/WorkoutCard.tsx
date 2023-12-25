@@ -1,15 +1,18 @@
+import { Link } from "@tanstack/react-router";
 import { BsThreeDots } from "react-icons/bs";
-import { Link } from "react-router-dom";
 
 import { Workout } from "@/app-constants";
 import { Dropdown, DropdownButton, DropdownMenu, DropdownItem } from "@/components";
 
-import { definedRoutes } from "../../routes";
-
 type Props = Pick<Workout, "id" | "averageCompletionTime" | "name" | "image">;
-
+// to={`${definedRoutes.workoutPage}/${id}`}
 export const WorkoutCard = ({ id, averageCompletionTime, name, image }: Props) => (
-  <Link key={id} to={`${definedRoutes.workoutPage}/${id}`}>
+  <Link
+    to="/workout/$id"
+    params={{
+      id,
+    }}
+  >
     <div className="relative w-full h-40 mt-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl">
       <img
         src={`/workout/${image}`}
@@ -24,7 +27,7 @@ export const WorkoutCard = ({ id, averageCompletionTime, name, image }: Props) =
       </div>
       <div className="absolute cursor-pointer top-4 right-4 ">
         <Dropdown>
-          <DropdownButton className="!py-1 !px-2 bg-white bg-opacity-90" outline>
+          <DropdownButton className="!py-1 !px-2 bg-white bg-opacity-90">
             <BsThreeDots className="cursor-pointer size-7 fill-slate-700 hover:fill-slate-800" />
           </DropdownButton>
           <DropdownMenu>

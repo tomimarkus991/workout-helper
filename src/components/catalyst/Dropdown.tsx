@@ -18,18 +18,18 @@ import {
   type MenuSectionProps as HeadlessMenuSectionProps,
   type MenuSeparatorProps as HeadlessMenuSeparatorProps,
 } from "@headlessui/react";
+import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 import type React from "react";
 import { Fragment } from "react";
 
-import { Button } from "./Button";
-import { Link } from "./Link";
+import { RealButton } from "@/components";
 
 export const Dropdown = (props: HeadlessMenuProps) => <HeadlessMenu {...props} />;
 
-export const DropdownButton = <T extends React.ElementType = typeof Button>(
+export const DropdownButton = <T extends React.ElementType = typeof RealButton>(
   props: React.ComponentProps<typeof HeadlessMenuButton<T>>,
-) => <HeadlessMenuButton as={Button} {...props} />;
+) => <HeadlessMenuButton as={RealButton} {...props} />;
 
 export const DropdownMenu = ({
   anchor = "bottom",

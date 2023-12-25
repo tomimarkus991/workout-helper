@@ -1,13 +1,11 @@
+import { Link } from "@tanstack/react-router";
 import { Form, Formik } from "formik";
 import { useState } from "react";
 import { HiArrowLeft } from "react-icons/hi";
-import { Link } from "react-router-dom";
 
 import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "@/app-constants";
 import { FormikInput, FormikToggle, RealButton } from "@/components";
 import { cn } from "@/lib";
-
-import { definedRoutes } from "../../routes";
 
 export const WorkoutCreator = () => {
   const [initialValues] = useState<CreateWorkoutFormValues>({
@@ -40,7 +38,7 @@ export const WorkoutCreator = () => {
       {({ isValid, handleSubmit, values, setFieldValue }) => (
         <Form className={cn("max-w-md min-h-screen p-2 flex flex-col")}>
           <div className="flex flex-row items-center justify-between my-5">
-            <Link to={definedRoutes.workoutsPage}>
+            <Link to="/">
               <HiArrowLeft className="icon" />
             </Link>
             <p className="text-3xl font-semibold text-center">Create Workout</p>
@@ -64,11 +62,11 @@ export const WorkoutCreator = () => {
                 <div key={exercise.exercise} className="p-2 bg-gray-200 rounded-md">
                   <div className="flex justify-between bg-gray-200">
                     <div>
-                      <span>{exercise.sets}x</span>
-                      <span>{exercise.reps}</span> <span>{exercise.exercise}</span>
+                      <p>{exercise.sets}x</p>
+                      <p>{exercise.reps}</p> <p>{exercise.exercise}</p>
                     </div>
 
-                    <div>{exercise.rest ? Number(exercise.rest) / 60 : 0} min rest</div>
+                    <p>{exercise.rest ? Number(exercise.rest) / 60 : 0} min rest</p>
                   </div>
                 </div>
               );

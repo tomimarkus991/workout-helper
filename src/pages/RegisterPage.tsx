@@ -1,6 +1,6 @@
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Form, Formik } from "formik";
 import { toast } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
 
 import { YupSchemas } from "@/app-constants";
 import { FormikInput, RealButton } from "@/components";
@@ -49,7 +49,7 @@ export const RegisterPage = () => {
             throw new Error(insertError.message);
           }
 
-          navigate("/login");
+          navigate({ to: "/login" });
 
           resetForm();
           setSubmitting(false);
