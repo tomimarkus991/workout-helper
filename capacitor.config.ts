@@ -1,8 +1,8 @@
 import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.reactify.vite",
-  appName: "reactify-vite",
+  appId: "com.caliwiz.www",
+  appName: "CaliWiz",
   webDir: "dist",
   server: {
     androidScheme: "https",

@@ -1,4 +1,4 @@
-package com.reactify.vite;
+package com.caliwiz.www;
 
 import com.getcapacitor.BridgeActivity;
 
