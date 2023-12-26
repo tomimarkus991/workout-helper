@@ -3,12 +3,12 @@ import * as yup from "yup";
 const CreateExercise = yup
   .object()
   .shape({
-    exercise: yup.string().nullable().optional(),
-    sets: yup.number().optional().min(1).default(0),
-    reps: yup.number().min(1).default(0),
-    duration: yup.number().nullable().optional().min(1),
+    exercise: yup.string().required("Exercise name is required").default(""),
+    sets: yup.number().min(1).default(0),
+    reps: yup.number().min(1).default(0).optional(),
+    duration: yup.number().min(0).default(0).optional(),
     rest: yup.number().min(0).default(0),
-    order: yup.number().nullable().optional().min(0),
+    order: yup.number().min(0).default(0),
   })
   .test("reps-duration", "Either reps or duration can be set", function (value) {
     const { reps, duration } = value;

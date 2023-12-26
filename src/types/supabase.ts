@@ -1,34 +1,41 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export interface Database {
   public: {
     Tables: {
-      exercises: {
+      exercise: {
         Row: {
-          duration: number | null;
-          exercise_id: string;
+          created_at: string | null;
+          duration: number;
           exercise_name: string;
+          id: string;
           order: number;
           reps: number;
+          rest: number;
           sets: number;
+          updated_at: string | null;
         };
         Insert: {
-          duration?: number | null;
-          exercise_id: string;
+          created_at?: string | null;
+          duration: number;
           exercise_name: string;
+          id: string;
           order: number;
           reps: number;
+          rest: number;
           sets: number;
+          updated_at?: string | null;
         };
         Update: {
-          duration?: number | null;
-          exercise_id?: string;
+          created_at?: string | null;
+          duration?: number;
           exercise_name?: string;
+          id?: string;
           order?: number;
           reps?: number;
+          rest?: number;
           sets?: number;
+          updated_at?: string | null;
         };
         Relationships: [];
       };
@@ -61,70 +68,73 @@ export interface Database {
           },
         ];
       };
-      workout_exercises: {
-        Row: {
-          exercise_id: string | null;
-          workout_exercise_id: string;
-          workout_id: string | null;
-        };
-        Insert: {
-          exercise_id?: string | null;
-          workout_exercise_id: string;
-          workout_id?: string | null;
-        };
-        Update: {
-          exercise_id?: string | null;
-          workout_exercise_id?: string;
-          workout_id?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "workout_exercises_exercise_id_fkey";
-            columns: ["exercise_id"];
-            isOneToOne: false;
-            referencedRelation: "exercises";
-            referencedColumns: ["exercise_id"];
-          },
-          {
-            foreignKeyName: "workout_exercises_workout_id_fkey";
-            columns: ["workout_id"];
-            isOneToOne: false;
-            referencedRelation: "workouts";
-            referencedColumns: ["workout_id"];
-          },
-        ];
-      };
-      workouts: {
+      workout: {
         Row: {
           average_completion_time: number | null;
+          created_at: string | null;
+          id: string;
           image: string | null;
-          profile_id: string | null;
+          profile_id: string;
           sequential_sets: boolean;
-          workout_id: string;
+          updated_at: string | null;
           workout_name: string;
         };
         Insert: {
           average_completion_time?: number | null;
+          created_at?: string | null;
+          id: string;
           image?: string | null;
-          profile_id?: string | null;
+          profile_id: string;
           sequential_sets?: boolean;
-          workout_id: string;
+          updated_at?: string | null;
           workout_name: string;
         };
         Update: {
           average_completion_time?: number | null;
+          created_at?: string | null;
+          id?: string;
           image?: string | null;
-          profile_id?: string | null;
+          profile_id?: string;
           sequential_sets?: boolean;
-          workout_id?: string;
+          updated_at?: string | null;
           workout_name?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "workouts_profile_id_fkey";
+            foreignKeyName: "workout_profile_id_fkey";
             columns: ["profile_id"];
             isOneToOne: false;
             referencedRelation: "profile";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      workout_exercise: {
+        Row: {
+          exercise_id: string;
+          workout_id: string;
+        };
+        Insert: {
+          exercise_id: string;
+          workout_id: string;
+        };
+        Update: {
+          exercise_id?: string;
+          workout_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "workout_exercise_exercise_id_fkey";
+            columns: ["exercise_id"];
+            isOneToOne: false;
+            referencedRelation: "exercise";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "workout_exercise_workout_id_fkey";
+            columns: ["workout_id"];
+            isOneToOne: false;
+            referencedRelation: "workout";
             referencedColumns: ["id"];
           },
         ];
@@ -218,5 +228,3 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
     ? Database["public"]["Enums"][PublicEnumNameOrOptions]
     : never;
-
-export type TypedSupabaseClient = SupabaseClient<Database>;

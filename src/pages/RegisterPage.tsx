@@ -42,7 +42,7 @@ export const RegisterPage = () => {
 
           const { error: insertError } = await supabase
             .from("profile")
-            .insert({ id: data.user?.id, username: values.username });
+            .insert({ id: data.user?.id as string, username: values.username });
 
           if (insertError) {
             toast.error(`Inserting profile error ${insertError.message}`);

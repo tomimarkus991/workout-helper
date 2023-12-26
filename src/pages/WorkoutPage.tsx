@@ -1,72 +1,18 @@
-import { Link } from "@tanstack/react-router";
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { add, format, setHours } from "date-fns";
 import { useEffect, useState } from "react";
 import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
 
-import { Workout } from "@/app-constants";
 import { RealButton } from "@/components";
+import { useGetWorkout } from "@/hooks";
 
 export const WorkoutPage = () => {
-  const workout: Workout = {
-    id: "2",
-    name: "Workout 2",
-    averageCompletionTime: 50,
-    duration: 3000,
-    image: "11w.jpg",
-    sequentialSets: true,
-    exercises: [
-      {
-        exercise: "Explosive pull-ups",
-        sets: 3,
-        reps: 8,
-        rest: 180,
-        order: 1,
-      },
-      {
-        exercise: "Front Lever pull-ups",
-        sets: 5,
-        reps: 8,
-        rest: 180,
-        order: 2,
-      },
-      {
-        exercise: "Toes to bar",
-        sets: 5,
-        reps: 8,
-        rest: 180,
-        order: 2,
-      },
-      {
-        exercise: "Face pulls with rings",
-        sets: 5,
-        reps: 10,
-        rest: 120,
-        order: 3,
-      },
-      {
-        exercise: "HSPU",
-        sets: 5,
-        reps: 10,
-        rest: 180,
-        order: 4,
-      },
-      {
-        exercise: "Pseudo planche push ups",
-        sets: 5,
-        reps: 8,
-        rest: 260,
-        order: 5,
-      },
-      {
-        exercise: "Planche lean hold",
-        sets: 5,
-        reps: 0,
-        duration: 15,
-        rest: 180,
-        order: 6,
-      },
-    ],
-  };
+  const { id } = useParams({ strict: false });
+
+  const { data: workout, isLoading, error } = useGetWorkout(id);
+
+  const navigate = useNavigate();
 
   const formatTime = (totalSeconds: number, desiredFormat = "mm:ss") => {
     const baseDate = setHours(new Date(), 0).setMinutes(0, 0, 0);
@@ -85,14 +31,14 @@ export const WorkoutPage = () => {
   const [totalWorkoutTime, setTotalWorkoutTime] = useState(0);
   const [totalWorkoutTimerActive, setTotalWorkoutTimerActive] = useState(false);
 
-  const currentExercise = workout.exercises[currentExerciseIndex];
-  const nextExercise = workout.exercises[currentExerciseIndex + 1] || workout.exercises[0];
+  const currentExercise = workout?.exercise[currentExerciseIndex]!;
+  const nextExercise = workout?.exercise[currentExerciseIndex + 1] || workout?.exercise[0];
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
     if (isResting) {
-      setRestCountdown(currentExercise.rest);
+      setRestCountdown(currentExercise?.rest || 0);
       interval = setInterval(() => {
         setRestCountdown(prev => prev - 1);
       }, 1000);
@@ -119,6 +65,10 @@ export const WorkoutPage = () => {
     return () => setTotalWorkoutTimerActive(false); // Stop the timer when the component unmounts
   }, []);
 
+  if (error?.message) {
+    navigate({ to: "/" });
+  }
+
   const handleCompleteExercise = () => {
     if (currentSet < currentExercise.sets) {
       setIsResting(true);
@@ -136,7 +86,7 @@ export const WorkoutPage = () => {
         setTimeout(() => setIsResting(false), currentExercise.rest * 1000);
       }
       const nextIndex = currentExerciseIndex + 1;
-      if (nextIndex < workout.exercises.length) {
+      if (nextIndex < workout!.exercise.length) {
         setCurrentExerciseIndex(nextIndex);
         setCurrentSet(1);
       } else {
@@ -145,6 +95,10 @@ export const WorkoutPage = () => {
       }
     }
   };
+
+  if (isLoading && !workout && !currentExercise) {
+    return <p>Loading...</p>;
+  }
 
   if (isWorkoutFinished) {
     return (
@@ -202,7 +156,7 @@ export const WorkoutPage = () => {
             ) : (
               <p className="text-2xl font-bold">{currentExercise.reps} reps</p>
             )}
-            <p className="text-xl font-semibold">{currentExercise.exercise}</p>
+            <p className="text-xl font-semibold">{currentExercise.exercise_name}</p>
             <p className="mt-5 text-3xl font-semibold">
               Set {currentSet + currentExercise.sets - currentExercise.sets}
             </p>
@@ -223,7 +177,7 @@ export const WorkoutPage = () => {
               }}
             />
             <div className="ml-4">
-              <p className="text-lg font-semibold">{currentExercise.exercise}</p>
+              <p className="text-lg font-semibold">{currentExercise.exercise_name}</p>
               <p className="text-sm text-gray-600">
                 {isResting
                   ? `Next up set ${currentSet + 1}`
@@ -242,8 +196,8 @@ export const WorkoutPage = () => {
               }}
             />
             <div className="ml-4">
-              <p className="text-lg font-semibold">{nextExercise.exercise}</p>
-              <p className="text-sm text-gray-600">{nextExercise.sets} sets</p>
+              <p className="text-lg font-semibold">{nextExercise?.exercise_name}</p>
+              <p className="text-sm text-gray-600">{nextExercise?.sets} sets</p>
             </div>
           </div>
         )}

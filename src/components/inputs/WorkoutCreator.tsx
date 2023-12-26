@@ -2,12 +2,20 @@ import { Link } from "@tanstack/react-router";
 import { Form, Formik } from "formik";
 import { useState } from "react";
 import { HiArrowLeft } from "react-icons/hi";
+import { v4 as genUuid } from "uuid";
 
 import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "@/app-constants";
 import { FormikInput, FormikToggle, RealButton } from "@/components";
+import { useCreateExercise, useCreateWorkout, useCreateWorkoutExercise, useSession } from "@/hooks";
 import { cn } from "@/lib";
 
 export const WorkoutCreator = () => {
+  const { mutateAsync: createWorkout } = useCreateWorkout();
+  const { mutateAsync: createExercise } = useCreateExercise();
+  const { mutateAsync: createWorkoutExercise } = useCreateWorkoutExercise();
+
+  const { data: user } = useSession();
+
   const [initialValues] = useState<CreateWorkoutFormValues>({
     name: "",
     averageCompletionTime: "" as unknown as number,
@@ -20,17 +28,70 @@ export const WorkoutCreator = () => {
     reps: "" as unknown as number,
     rest: "" as unknown as number,
     order: "" as unknown as number,
+    duration: "" as unknown as number,
   });
 
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={YupSchemas.CreateWorkout}
-      validateOnChange={true}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
+      // validationSchema={YupSchemas.CreateWorkout}
+      // validateOnChange={true}
+      onSubmit={async (values, { setSubmitting, resetForm }) => {
         setSubmitting(true);
 
-        console.log(values);
+        const {
+          sequentialSets,
+          averageCompletionTime,
+          image = `${Math.floor(Math.random() * 11 + 1)}w.jpg`,
+        } = values;
+
+        const workoutId = genUuid();
+
+        await createWorkout({
+          id: workoutId,
+          workout_name: "test",
+          average_completion_time:
+            typeof averageCompletionTime === "string" ? 0 : averageCompletionTime,
+          sequential_sets: sequentialSets || true,
+          image,
+          profile_id: user?.user.id as string,
+        });
+
+        for await (const { reps, rest, sets, duration, exercise, order } of [
+          {
+            duration: 0,
+            exercise: "Pullups",
+            order: 0,
+            reps: 10,
+            rest: 180,
+            sets: 3,
+          },
+          {
+            duration: 0,
+            exercise: "Pushups",
+            order: 1,
+            reps: 10,
+            rest: 180,
+            sets: 3,
+          },
+        ]) {
+          const exerciseId = genUuid();
+
+          await createExercise({
+            id: exerciseId,
+            exercise_name: exercise,
+            order,
+            reps,
+            sets,
+            rest,
+            duration,
+          });
+          await createWorkoutExercise({
+            exercise_id: exerciseId,
+            workout_id: workoutId,
+          });
+        }
+
         resetForm();
         setSubmitting(false);
       }}
@@ -59,12 +120,11 @@ export const WorkoutCreator = () => {
           <div className="space-y-2">
             {values.exercises?.map(exercise => {
               return (
-                <div key={exercise.exercise} className="p-2 bg-gray-200 rounded-md">
-                  <div className="flex justify-between bg-gray-200">
-                    <div>
-                      <p>{exercise.sets}x</p>
-                      <p>{exercise.reps}</p> <p>{exercise.exercise}</p>
-                    </div>
+                <div key={exercise.exercise} className="p-2 border border-blue-600 rounded-lg">
+                  <div className="flex flex-row justify-between">
+                    <p>
+                      {exercise.sets}x {exercise.reps} {exercise.exercise}
+                    </p>
 
                     <p>{exercise.rest ? Number(exercise.rest) / 60 : 0} min rest</p>
                   </div>

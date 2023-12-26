@@ -1,6 +1,7 @@
 import "./index.css";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   Outlet,
   Route,
@@ -37,7 +38,7 @@ const RootComponent = () => {
   return (
     <>
       <Outlet />
-      {/* <ReactQueryDevtools buttonPosition="top-right" /> */}
+      <ReactQueryDevtools buttonPosition="top-right" />
       {/* <TanStackRouterDevtools position="bottom-right" /> */}
     </>
   );
