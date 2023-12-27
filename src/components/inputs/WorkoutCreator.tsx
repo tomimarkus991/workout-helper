@@ -90,7 +90,7 @@ export const WorkoutCreator = () => {
             <p className="text-3xl font-semibold text-center">Create Workout</p>
             <HiArrowLeft className="opacity-0 icon" />
           </div>
-          <div className="mb-5 ">
+          <div className="mb-5">
             <div className="flex space-x-1">
               <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
               <FormikInput
@@ -142,7 +142,7 @@ export const WorkoutCreator = () => {
               {({ handleSubmit: handleExerciseSubmit, isValid: _isValid }) => (
                 <Form>
                   <FormikInput name="exercise" placeholder="Scapula shrugs" label="Exercise name" />
-                  <div className="flex mt-1 mb-2 space-x-2">
+                  <div className="flex mt-1 mb-2 space-x-1">
                     <FormikInput type="number" name="sets" placeholder="3" label="Sets" />
                     <FormikInput type="number" name="rest" placeholder="180" label="Rest (sec)" />
                   </div>
