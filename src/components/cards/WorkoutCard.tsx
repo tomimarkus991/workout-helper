@@ -1,8 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { BsThreeDots } from "react-icons/bs";
 
 import { Workout } from "@/app-constants";
-import { Dropdown, DropdownButton, DropdownMenu, DropdownItem } from "@/components";
 
 type Props = Pick<Workout, "id" | "averageCompletionTime" | "name" | "image">;
 // to={`${definedRoutes.workoutPage}/${id}`}
@@ -24,17 +22,6 @@ export const WorkoutCard = ({ id, averageCompletionTime, name, image }: Props) =
       </div>
       <div className="absolute px-4 py-2 bg-white rounded bottom-4 left-4 bg-opacity-70">
         <p className="text-lg font-medium text-slate-800">{averageCompletionTime}</p>
-      </div>
-      <div className="absolute cursor-pointer top-4 right-4 ">
-        <Dropdown>
-          <DropdownButton className="!py-1 !px-2 bg-white bg-opacity-90">
-            <BsThreeDots className="cursor-pointer size-7 fill-slate-700 hover:fill-slate-800" />
-          </DropdownButton>
-          <DropdownMenu>
-            <DropdownItem href="/users/1/edit">Edit</DropdownItem>
-            <DropdownItem onClick={() => {}}>Delete</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
       </div>
     </div>
   </Link>

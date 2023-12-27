@@ -5,7 +5,7 @@ import { HiArrowLeft } from "react-icons/hi";
 import { v4 as genUuid } from "uuid";
 
 import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "@/app-constants";
-import { FormikInput, FormikToggle, RealButton } from "@/components";
+import { ExerciseCard, FormikInput, FormikToggle, RealButton } from "@/components";
 import { useCreateExercise, useCreateWorkout, useCreateWorkoutExercise, useSession } from "@/hooks";
 import { cn } from "@/lib";
 
@@ -105,23 +105,14 @@ export const WorkoutCreator = () => {
           <div className="space-y-2">
             {values.exercises?.map(exercise => {
               return (
-                <div key={exercise.exercise} className="p-2 border border-blue-600 rounded-lg">
-                  <div className="flex flex-row justify-between">
-                    <div className="flex flex-row">
-                      <p>{exercise.sets}x</p>
-                      <p>
-                        {exercise.reps === 0 && exercise.duration > 0
-                          ? `${exercise.duration}s`
-                          : `${exercise.reps} reps`}
-                      </p>
-                    </div>
-                    {exercise.rest < 60 ? (
-                      <p>{exercise.rest} sec rest</p>
-                    ) : (
-                      <p>{(Number(exercise.rest) / 60).toFixed(1)} min rest</p>
-                    )}
-                  </div>
-                </div>
+                <ExerciseCard
+                  key={exercise.exercise}
+                  duration={exercise.duration}
+                  sets={exercise.sets}
+                  reps={exercise.reps}
+                  rest={exercise.rest}
+                  name={exercise.exercise}
+                />
               );
             })}
           </div>

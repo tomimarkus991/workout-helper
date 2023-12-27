@@ -9,7 +9,7 @@ export const WorkoutsPage = () => {
   const { data: workouts, isLoading } = useGetWorkouts();
 
   if (!workouts && isLoading) {
-    return <p>Loading...</p>;
+    return <p></p>;
   }
 
   if (!user) {

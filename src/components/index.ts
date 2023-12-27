@@ -5,3 +5,5 @@ export * from "./inputs";
 export * from "./button";
 export * from "./catalyst";
 export * from "./elements";
+export * from "./Popover";
+export * from "./pages";
