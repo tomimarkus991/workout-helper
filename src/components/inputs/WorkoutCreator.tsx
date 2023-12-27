@@ -59,6 +59,8 @@ export const WorkoutCreator = () => {
           profile_id: user?.user.id as string,
         });
 
+        console.log(exercises);
+
         for await (const { reps, rest, sets, duration, exercise, order } of exercises) {
           const exerciseId = genUuid();
 
@@ -66,10 +68,10 @@ export const WorkoutCreator = () => {
             id: exerciseId,
             exercise_name: exercise,
             order,
-            reps,
+            reps: typeof reps === "string" ? 0 : reps,
             sets,
             rest,
-            duration,
+            duration: typeof duration === "string" ? 0 : duration,
           });
           await createWorkoutExercise({
             exercise_id: exerciseId,
