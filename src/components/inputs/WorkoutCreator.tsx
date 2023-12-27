@@ -34,8 +34,8 @@ export const WorkoutCreator = () => {
   return (
     <Formik
       initialValues={initialValues}
-      // validationSchema={YupSchemas.CreateWorkout}
-      // validateOnChange={true}
+      validationSchema={YupSchemas.CreateWorkout}
+      validateOnChange={true}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
         setSubmitting(true);
 
@@ -43,13 +43,15 @@ export const WorkoutCreator = () => {
           sequentialSets,
           averageCompletionTime,
           image = `${Math.floor(Math.random() * 11 + 1)}w.jpg`,
+          exercises,
+          name,
         } = values;
 
         const workoutId = genUuid();
 
         await createWorkout({
           id: workoutId,
-          workout_name: "test",
+          workout_name: name,
           average_completion_time:
             typeof averageCompletionTime === "string" ? 0 : averageCompletionTime,
           sequential_sets: sequentialSets || true,
@@ -57,24 +59,7 @@ export const WorkoutCreator = () => {
           profile_id: user?.user.id as string,
         });
 
-        for await (const { reps, rest, sets, duration, exercise, order } of [
-          {
-            duration: 0,
-            exercise: "Pullups",
-            order: 0,
-            reps: 10,
-            rest: 180,
-            sets: 3,
-          },
-          {
-            duration: 0,
-            exercise: "Pushups",
-            order: 1,
-            reps: 10,
-            rest: 180,
-            sets: 3,
-          },
-        ]) {
+        for await (const { reps, rest, sets, duration, exercise, order } of exercises) {
           const exerciseId = genUuid();
 
           await createExercise({
@@ -143,7 +128,12 @@ export const WorkoutCreator = () => {
               ) => {
                 _setSubmitting(true);
 
-                setFieldValue("exercises", [...values.exercises, exerciseValues]);
+                const exerciseValuesWithOrder = {
+                  ...exerciseValues,
+                  order: values.exercises.length + 1,
+                };
+
+                setFieldValue("exercises", [...values.exercises, exerciseValuesWithOrder]);
                 _resetForm();
 
                 _setSubmitting(false);

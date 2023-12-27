@@ -7,6 +7,10 @@ export const useGetWorkouts = () => {
   const getQuery = async () => {
     const { data: user } = await supabase.auth.getSession();
 
+    if (!user) {
+      return [];
+    }
+
     const { data, error } = await supabase
       .from("workout")
       .select("*")

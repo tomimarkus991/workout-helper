@@ -5,7 +5,7 @@ const CreateExercise = yup
   .shape({
     exercise: yup.string().required("Exercise name is required").default(""),
     sets: yup.number().min(1).default(0),
-    reps: yup.number().min(1).default(0).optional(),
+    reps: yup.number().min(0).default(0).optional(),
     duration: yup.number().min(0).default(0).optional(),
     rest: yup.number().min(0).default(0),
     order: yup.number().min(0).default(0),
