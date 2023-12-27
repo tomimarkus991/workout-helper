@@ -15,6 +15,10 @@ export const WorkoutPage = () => {
   const navigate = useNavigate();
 
   const formatTime = (totalSeconds: number, desiredFormat = "mm:ss") => {
+    if (totalSeconds <= 0) {
+      return "00:00";
+    }
+
     const baseDate = setHours(new Date(), 0).setMinutes(0, 0, 0);
     const date = add(baseDate, { seconds: totalSeconds });
     return format(date, desiredFormat);
@@ -27,6 +31,7 @@ export const WorkoutPage = () => {
 
   // this counts down rest periods
   const [restCountdown, setRestCountdown] = useState(0);
+  const [durationCountdown, setDurationCountdown] = useState(0);
 
   const [totalWorkoutTime, setTotalWorkoutTime] = useState(0);
   const [totalWorkoutTimerActive, setTotalWorkoutTimerActive] = useState(false);
@@ -35,17 +40,47 @@ export const WorkoutPage = () => {
   const nextExercise = workout?.exercise[currentExerciseIndex + 1];
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let restTimeout: any;
+    if (isResting && restCountdown === 0) {
+      restTimeout = setTimeout(() => {
+        setIsResting(false);
+        if (currentSet < currentExercise?.sets) {
+          setCurrentSet(currentSet + 1);
+        } else {
+          // eslint-disable-next-line no-use-before-define
+          handleCompleteExercise();
+        }
+      }, 1000);
+    }
+
+    return () => clearTimeout(restTimeout);
+  }, [isResting, restCountdown, currentSet, currentExercise?.sets]);
+
+  useEffect(() => {
+    let interval: any;
 
     if (isResting) {
-      setRestCountdown(currentExercise?.rest || 0);
+      setRestCountdown(currentExercise.rest);
       interval = setInterval(() => {
-        setRestCountdown(prev => prev - 1);
+        setRestCountdown(prev => (prev > 0 ? prev - 1 : 0));
       }, 1000);
     }
 
     return () => clearInterval(interval);
   }, [isResting]);
+
+  useEffect(() => {
+    let interval: any;
+
+    if (currentExercise?.duration !== 0 && !isResting) {
+      setDurationCountdown(currentExercise?.duration || 0);
+      interval = setInterval(() => {
+        setDurationCountdown(prev => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [currentExercise?.duration, isResting]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -71,18 +106,13 @@ export const WorkoutPage = () => {
 
   const handleCompleteExercise = () => {
     if (currentSet < currentExercise.sets) {
-      setIsResting(true);
       setCurrentSet(currentSet + 1);
-      setTimeout(() => {
-        setIsResting(false);
-      }, currentExercise.rest * 1000);
 
-      // go to next exercise
+      setRestCountdown(currentExercise?.rest || 0);
+      setIsResting(true);
+
+      // else (when the last set ends): go to next exercise
     } else {
-      if (currentExercise.rest) {
-        setIsResting(true);
-        setTimeout(() => setIsResting(false), currentExercise.rest * 1000);
-      }
       const nextIndex = currentExerciseIndex + 1;
       if (nextIndex < workout!.exercise.length) {
         setCurrentExerciseIndex(nextIndex);
@@ -135,21 +165,19 @@ export const WorkoutPage = () => {
           {isResting && (
             <p className="mt-32 text-5xl font-bold font-number">{formatTime(restCountdown)}</p>
           )}
-          {currentExercise.duration !== 0 && (
-            <p className="z-10 text-3xl font-bold font-number">
-              {formatTime(currentExercise.duration)}
+          {currentExercise.duration !== 0 && !isResting && (
+            <p className="z-10 mt-6 text-3xl font-bold font-number">
+              {formatTime(durationCountdown)}
             </p>
           )}
         </div>
 
         {!isResting && (
           <div className="mt-4 mb-2 text-center">
-            {currentExercise.reps === 0 ? (
-              <p className="text-2xl font-bold">{currentExercise.duration} seconds</p>
-            ) : (
+            {currentExercise.reps !== 0 && (
               <p className="text-2xl font-bold">{currentExercise.reps} reps</p>
             )}
-            <p className="text-xl font-semibold">{currentExercise.exercise_name}</p>
+            <p className="text-2xl font-semibold">{currentExercise.exercise_name}</p>
             <p className="mt-5 text-3xl font-semibold">
               Set {currentSet + currentExercise.sets - currentExercise.sets}
             </p>
@@ -157,7 +185,7 @@ export const WorkoutPage = () => {
         )}
       </div>
 
-      {!nextExercise ? (
+      {!nextExercise && currentExercise.sets === currentSet ? (
         <>
           <div className="p-4 mt-auto bg-slate-800">
             <p className="text-2xl font-semibold text-center">Last set</p>
@@ -227,7 +255,7 @@ export const WorkoutPage = () => {
               <RealButton
                 className="px-2 w-14"
                 variant="blue"
-                onClick={() => setRestCountdown(prev => prev - 10)}
+                onClick={() => setRestCountdown(prev => Math.max(prev - 10, 0))}
               >
                 -10
               </RealButton>
