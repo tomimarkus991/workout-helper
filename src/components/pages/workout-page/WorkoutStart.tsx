@@ -255,6 +255,7 @@ export const WorkoutStart = () => {
               <RealButton
                 className="px-2 w-14"
                 variant="blue"
+                disabled
                 onClick={() => setRestCountdown(prev => Math.max(prev - 10, 0))}
               >
                 -10
@@ -265,6 +266,7 @@ export const WorkoutStart = () => {
               <RealButton
                 className="px-2 w-14"
                 variant="blue"
+                disabled
                 onClick={() => setRestCountdown(prev => prev + 10)}
               >
                 +10

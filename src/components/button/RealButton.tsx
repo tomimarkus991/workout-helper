@@ -62,6 +62,7 @@ export const realButtonVariants = cva(
     "m-0 border-b-[6px] text-center font-medium tracking-wider font-sans whitespace-nowrap",
     "transition-all duration-300 hover:-translate-y-[0.15rem]",
     "active:translate-y-[0.2rem] active:duration-75",
+    "disabled:opacity-60",
   ],
   {
     // regular --> hover --> active --> dark --> focus
