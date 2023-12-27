@@ -14,7 +14,7 @@
     "coverage": "vitest run --coverage",
     "android:open": "npx cap open android",
     "android:run": "npx cap run android",
-    "sync": "npx cap sync",
+    "build:app": "npm run build && npx cap sync",
     "ionic:build": "npm run build",
     "ionic:serve": "npm run start",
     "supabase:types": "npx supabase gen types typescript --project-id aqqxnzjpzgemogdzgtek > src/types/supabase.ts"
