@@ -109,11 +109,19 @@ export const WorkoutCreator = () => {
               return (
                 <div key={exercise.exercise} className="p-2 border border-blue-600 rounded-lg">
                   <div className="flex flex-row justify-between">
-                    <p>
-                      {exercise.sets}x {exercise.reps} {exercise.exercise}
-                    </p>
-
-                    <p>{exercise.rest ? Number(exercise.rest) / 60 : 0} min rest</p>
+                    <div className="flex flex-row">
+                      <p>{exercise.sets}x</p>
+                      <p>
+                        {exercise.reps === 0 && exercise.duration > 0
+                          ? `${exercise.duration}s`
+                          : `${exercise.reps} reps`}
+                      </p>
+                    </div>
+                    {exercise.rest < 60 ? (
+                      <p>{exercise.rest} sec rest</p>
+                    ) : (
+                      <p>{(Number(exercise.rest) / 60).toFixed(1)} min rest</p>
+                    )}
                   </div>
                 </div>
               );
