@@ -59,8 +59,6 @@ export const WorkoutCreator = () => {
           profile_id: user?.user.id as string,
         });
 
-        console.log(exercises);
-
         for await (const { reps, rest, sets, duration, exercise, order } of exercises) {
           const exerciseId = genUuid();
 
