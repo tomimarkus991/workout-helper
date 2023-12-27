@@ -1,5 +1,7 @@
-import { useParams } from "@tanstack/react-router";
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+import { Link, useParams } from "@tanstack/react-router";
 import { BsThreeDots } from "react-icons/bs";
+import { HiArrowLeft } from "react-icons/hi";
 
 import {
   AnimationWrapper,
@@ -10,7 +12,7 @@ import {
   RealButton,
   animations,
 } from "@/components";
-import { useGetWorkout } from "@/hooks";
+import { useDeleteWorkout, useGetWorkout } from "@/hooks";
 
 interface Props {
   isWorkingOut: boolean;
@@ -21,9 +23,13 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { id } = useParams({ strict: false });
 
   const { data: workout } = useGetWorkout(id);
+  const { mutate: deleteWorkout } = useDeleteWorkout();
   return (
     <div className="flex flex-col min-h-screen p-4">
-      <div className="flex flex-row mx-6">
+      <div className="flex flex-row items-center ml-3 mr-6">
+        <Link to="/">
+          <HiArrowLeft className="mr-4 cursor-pointer size-7 fill-white hover:fill-gray-200" />
+        </Link>
         <p className="text-4xl font-semibold text-center">{workout?.workout_name}</p>
 
         <div className="ml-auto">
@@ -35,8 +41,7 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
             </PopoverTrigger>
             <PopoverContent>
               <div className="flex flex-col items-center space-y-1">
-                <p>edit</p>
-                <p>delete</p>
+                <p onClick={() => deleteWorkout({ id })}>delete</p>
               </div>
             </PopoverContent>
           </Popover>
