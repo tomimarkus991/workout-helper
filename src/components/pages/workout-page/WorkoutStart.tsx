@@ -20,6 +20,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { id } = useParams({ strict: false });
 
   const { data: workout, isLoading, error } = useGetWorkout(id);
+  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
 
   const navigate = useNavigate();
 
@@ -58,12 +59,8 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         setRestCountdown(localCountdown);
 
         if (localCountdown > 0) {
-          if (localCountdown === 5) {
-            FiveSec.play();
-          }
-          if (localCountdown <= 0) {
-            Complete.play();
-          }
+          if (localCountdown === 5 && isAudioEnabled) FiveSec.play();
+          if (localCountdown <= 0 && isAudioEnabled) Complete.play();
         } else {
           // Stop resting when countdown hits 0
           setIsResting(false);
@@ -86,14 +83,9 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         localCountdown -= 1;
         setExerciseCountdown(localCountdown);
 
-        if (localCountdown === 5) {
-          FiveSec.play();
-        }
-
-        if (localCountdown <= 0) {
-          Complete.play();
-          clearInterval(interval);
-        }
+        if (localCountdown === 5 && isAudioEnabled) FiveSec.play();
+        if (localCountdown <= 0 && isAudioEnabled) Complete.play();
+        if (localCountdown <= 0) clearInterval(interval);
       }, 1000);
     }
 
@@ -165,7 +157,11 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
           {formatTime(totalWorkoutTime, "HH:mm:ss")}
         </p>
         <div className="flex items-center space-x-2">
-          {true ? <HiOutlineVolumeUp className="icon" /> : <HiOutlineVolumeOff className="icon" />}
+          {isAudioEnabled ? (
+            <HiOutlineVolumeUp onClick={() => setIsAudioEnabled(false)} className="icon" />
+          ) : (
+            <HiOutlineVolumeOff onClick={() => setIsAudioEnabled(true)} className="icon" />
+          )}
         </div>
       </div>
 
@@ -216,7 +212,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               variant="blue"
               onClick={() => {
                 setIsWorkoutFinished(true);
-                Complete.play();
+                if (isAudioEnabled) Complete.play();
               }}
             >
               Complete workout
