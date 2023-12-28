@@ -17,6 +17,7 @@ export const useGetWorkout = (workoutId: string) => {
     `,
       )
       .eq("id", workoutId)
+      .order("order", { referencedTable: "exercise", ascending: true })
       .single();
 
     if (error) {
