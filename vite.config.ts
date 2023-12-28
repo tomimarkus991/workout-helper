@@ -28,9 +28,9 @@ export default defineConfig({
       ],
       manifest: {
         start_url: ".",
-        name: "Reactify",
-        short_name: "Reactify",
-        description: "Boilerplate to get started fast",
+        name: "CaliWiz",
+        short_name: "CaliWiz",
+        description: "Workout helper app",
         theme_color: "#282c31",
         background_color: "#282c31",
         orientation: "portrait",
