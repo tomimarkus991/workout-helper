@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+// import { NativeAudio } from "@capacitor-community/native-audio";
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { add, format, setHours } from "date-fns";
 import { useEffect, useState } from "react";
@@ -11,6 +12,9 @@ interface Props {
   isWorkingOut: boolean;
   setIsWorkingOut: (isWorkingOut: boolean) => void;
 }
+
+const Complete = new Audio("/sounds/complete.wav");
+const FiveSec = new Audio("/sounds/5-sec.mp3");
 
 export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { id } = useParams({ strict: false });
@@ -43,24 +47,28 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const nextExercise = workout?.exercise[currentExerciseIndex + 1];
 
   useEffect(() => {
-    let restTimeout: any;
-
-    if (isResting && restCountdown === 0) {
-      restTimeout = setTimeout(() => {
-        setIsResting(false);
-      }, 1000);
-    }
-
-    return () => clearTimeout(restTimeout);
-  }, [isResting, restCountdown]);
-
-  useEffect(() => {
     let interval: any;
 
     if (isResting) {
-      setRestCountdown(currentExercise.rest);
+      let localCountdown = currentExercise.rest;
+      setRestCountdown(localCountdown);
+
       interval = setInterval(() => {
-        setRestCountdown(prev => (prev > 0 ? prev - 1 : 0));
+        localCountdown -= 1;
+        setRestCountdown(localCountdown);
+
+        if (localCountdown > 0) {
+          if (localCountdown === 5) {
+            FiveSec.play();
+          }
+          if (localCountdown <= 0) {
+            Complete.play();
+          }
+        } else {
+          // Stop resting when countdown hits 0
+          setIsResting(false);
+          clearInterval(interval);
+        }
       }, 1000);
     }
 
@@ -71,9 +79,21 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     let interval: any;
 
     if (currentExercise?.duration !== 0 && !isResting) {
-      setExerciseCountdown(currentExercise?.duration || 0);
+      let localCountdown = currentExercise?.duration || 0;
+      setExerciseCountdown(localCountdown);
+
       interval = setInterval(() => {
-        setExerciseCountdown(prev => (prev > 0 ? prev - 1 : 0));
+        localCountdown -= 1;
+        setExerciseCountdown(localCountdown);
+
+        if (localCountdown === 5) {
+          FiveSec.play();
+        }
+
+        if (localCountdown <= 0) {
+          Complete.play();
+          clearInterval(interval);
+        }
       }, 1000);
     }
 
@@ -83,14 +103,18 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    if (isWorkingOut) {
+    if (isWorkingOut && !isWorkoutFinished) {
       interval = setInterval(() => {
         setTotalWorkoutTime(prev => prev + 1);
       }, 1000);
     }
 
+    if (isWorkoutFinished) {
+      FiveSec.pause();
+    }
+
     return () => clearInterval(interval);
-  }, [isWorkingOut]);
+  }, [isWorkingOut, isWorkoutFinished]);
 
   if (error?.message) {
     navigate({ to: "/" });
@@ -123,7 +147,10 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     return (
       <div className="mt-40 text-center">
         <p className="text-2xl">Workout Complete</p>
-        <p className="text-2xl mt-6">Time: {formatTime(totalWorkoutTime, "HH:mm:ss")}</p>
+        <p className="text-2xl my-6">Time: {formatTime(totalWorkoutTime, "HH:mm:ss")}</p>
+        <RealButton variant="blue" onClick={() => setIsWorkingOut(false)}>
+          Back
+        </RealButton>
       </div>
     );
   }
@@ -188,8 +215,8 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               className="w-full mt-6 mb-4"
               variant="blue"
               onClick={() => {
-                setIsWorkingOut(false);
                 setIsWorkoutFinished(true);
+                Complete.play();
               }}
             >
               Complete workout
