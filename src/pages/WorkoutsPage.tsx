@@ -38,7 +38,7 @@ export const WorkoutsPage = () => {
   }
 
   return (
-    <div className="max-w-md mt-5 mb-24">
+    <div className="max-w-md mt-5 mb-24 m-auto">
       <div className="mx-4">
         {workouts?.map(workout => (
           <WorkoutCard

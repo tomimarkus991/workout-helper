@@ -7,7 +7,12 @@ import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
 import { RealButton } from "@/components";
 import { useGetWorkout } from "@/hooks";
 
-export const WorkoutStart = () => {
+interface Props {
+  isWorkingOut: boolean;
+  setIsWorkingOut: (isWorkingOut: boolean) => void;
+}
+
+export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { id } = useParams({ strict: false });
 
   const { data: workout, isLoading, error } = useGetWorkout(id);
@@ -18,9 +23,9 @@ export const WorkoutStart = () => {
     if (totalSeconds <= 0) {
       return "00:00";
     }
-
     const baseDate = setHours(new Date(), 0).setMinutes(0, 0, 0);
     const date = add(baseDate, { seconds: totalSeconds });
+
     return format(date, desiredFormat);
   };
 
@@ -31,30 +36,23 @@ export const WorkoutStart = () => {
 
   // this counts down rest periods
   const [restCountdown, setRestCountdown] = useState(0);
-  const [durationCountdown, setDurationCountdown] = useState(0);
-
+  const [exerciseCountdown, setExerciseCountdown] = useState(0);
   const [totalWorkoutTime, setTotalWorkoutTime] = useState(0);
-  const [totalWorkoutTimerActive, setTotalWorkoutTimerActive] = useState(false);
 
   const currentExercise = workout?.exercise[currentExerciseIndex]!;
   const nextExercise = workout?.exercise[currentExerciseIndex + 1];
 
   useEffect(() => {
     let restTimeout: any;
+
     if (isResting && restCountdown === 0) {
       restTimeout = setTimeout(() => {
         setIsResting(false);
-        if (currentSet < currentExercise?.sets) {
-          setCurrentSet(currentSet + 1);
-        } else {
-          // eslint-disable-next-line no-use-before-define
-          handleCompleteExercise();
-        }
       }, 1000);
     }
 
     return () => clearTimeout(restTimeout);
-  }, [isResting, restCountdown, currentSet, currentExercise?.sets]);
+  }, [isResting, restCountdown]);
 
   useEffect(() => {
     let interval: any;
@@ -73,9 +71,9 @@ export const WorkoutStart = () => {
     let interval: any;
 
     if (currentExercise?.duration !== 0 && !isResting) {
-      setDurationCountdown(currentExercise?.duration || 0);
+      setExerciseCountdown(currentExercise?.duration || 0);
       interval = setInterval(() => {
-        setDurationCountdown(prev => (prev > 0 ? prev - 1 : 0));
+        setExerciseCountdown(prev => (prev > 0 ? prev - 1 : 0));
       }, 1000);
     }
 
@@ -85,20 +83,14 @@ export const WorkoutStart = () => {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    if (totalWorkoutTimerActive) {
+    if (isWorkingOut) {
       interval = setInterval(() => {
         setTotalWorkoutTime(prev => prev + 1);
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [totalWorkoutTimerActive]);
-
-  // Start the total timer when the workout begins
-  useEffect(() => {
-    setTotalWorkoutTimerActive(true);
-    return () => setTotalWorkoutTimerActive(false); // Stop the timer when the component unmounts
-  }, []);
+  }, [isWorkingOut]);
 
   if (error?.message) {
     navigate({ to: "/" });
@@ -110,7 +102,6 @@ export const WorkoutStart = () => {
 
       setRestCountdown(currentExercise?.rest || 0);
       setIsResting(true);
-
       // else (when the last set ends): go to next exercise
     } else {
       const nextIndex = currentExerciseIndex + 1;
@@ -118,6 +109,9 @@ export const WorkoutStart = () => {
         setCurrentExerciseIndex(nextIndex);
         setCurrentSet(1);
       }
+      // when switching to next exercise, start rest countdown
+      setRestCountdown(currentExercise?.rest || 0);
+      setIsResting(true);
     }
   };
 
@@ -129,13 +123,13 @@ export const WorkoutStart = () => {
     return (
       <div className="mt-40 text-center">
         <p className="text-2xl">Workout Complete</p>
-        <p className="text-2xl">Time: {formatTime(totalWorkoutTime, "HH:mm:ss")}</p>
+        <p className="text-2xl mt-6">Time: {formatTime(totalWorkoutTime, "HH:mm:ss")}</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen max-w-md mx-auto">
       <div className="flex items-center justify-between p-4">
         <Link to="/">
           <HiX className="icon" />
@@ -167,7 +161,7 @@ export const WorkoutStart = () => {
           )}
           {currentExercise.duration !== 0 && !isResting && (
             <p className="z-10 mt-6 text-3xl font-bold font-number">
-              {formatTime(durationCountdown)}
+              {formatTime(exerciseCountdown)}
             </p>
           )}
         </div>
@@ -194,7 +188,7 @@ export const WorkoutStart = () => {
               className="w-full mt-6 mb-4"
               variant="blue"
               onClick={() => {
-                setTotalWorkoutTimerActive(false);
+                setIsWorkingOut(false);
                 setIsWorkoutFinished(true);
               }}
             >
@@ -255,7 +249,6 @@ export const WorkoutStart = () => {
               <RealButton
                 className="px-2 w-14"
                 variant="blue"
-                disabled
                 onClick={() => setRestCountdown(prev => Math.max(prev - 10, 0))}
               >
                 -10
@@ -266,7 +259,6 @@ export const WorkoutStart = () => {
               <RealButton
                 className="px-2 w-14"
                 variant="blue"
-                disabled
                 onClick={() => setRestCountdown(prev => prev + 10)}
               >
                 +10

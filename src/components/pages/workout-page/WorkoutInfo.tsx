@@ -25,7 +25,7 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { data: workout } = useGetWorkout(id);
   const { mutate: deleteWorkout } = useDeleteWorkout();
   return (
-    <div className="flex flex-col min-h-screen p-4">
+    <div className="flex flex-col min-h-screen max-w-md m-auto p-4">
       <div className="flex flex-row items-center ml-3 mr-6">
         <Link to="/">
           <HiArrowLeft className="mr-4 cursor-pointer size-7 fill-white hover:fill-gray-200" />

@@ -82,7 +82,7 @@ export const WorkoutCreator = () => {
       }}
     >
       {({ isValid, handleSubmit, values, setFieldValue }) => (
-        <Form className={cn("max-w-md min-h-screen p-2 flex flex-col")}>
+        <Form className={cn("max-w-md mx-auto min-h-screen p-2 flex flex-col")}>
           <div className="flex flex-row items-center justify-between my-5">
             <Link to="/">
               <HiArrowLeft className="icon" />

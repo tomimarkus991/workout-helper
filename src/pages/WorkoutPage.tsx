@@ -10,7 +10,7 @@ export const WorkoutPage = () => {
       {!isWorkingOut ? (
         <WorkoutInfo isWorkingOut={isWorkingOut} setIsWorkingOut={setIsWorkingOut} />
       ) : (
-        <WorkoutStart />
+        <WorkoutStart isWorkingOut={isWorkingOut} setIsWorkingOut={setIsWorkingOut} />
       )}
     </>
   );
