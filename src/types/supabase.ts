@@ -14,6 +14,7 @@ export interface Database {
           rest: number;
           sets: number;
           updated_at: string | null;
+          workout_id: string | null;
         };
         Insert: {
           created_at?: string | null;
@@ -25,6 +26,7 @@ export interface Database {
           rest: number;
           sets: number;
           updated_at?: string | null;
+          workout_id?: string | null;
         };
         Update: {
           created_at?: string | null;
@@ -36,8 +38,17 @@ export interface Database {
           rest?: number;
           sets?: number;
           updated_at?: string | null;
+          workout_id?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "exercise_workout_id_fkey";
+            columns: ["workout_id"];
+            isOneToOne: false;
+            referencedRelation: "workout";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       profile: {
         Row: {
@@ -105,36 +116,6 @@ export interface Database {
             columns: ["profile_id"];
             isOneToOne: false;
             referencedRelation: "profile";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      workout_exercise: {
-        Row: {
-          exercise_id: string;
-          workout_id: string;
-        };
-        Insert: {
-          exercise_id: string;
-          workout_id: string;
-        };
-        Update: {
-          exercise_id?: string;
-          workout_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "workout_exercise_exercise_id_fkey";
-            columns: ["exercise_id"];
-            isOneToOne: false;
-            referencedRelation: "exercise";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "workout_exercise_workout_id_fkey";
-            columns: ["workout_id"];
-            isOneToOne: false;
-            referencedRelation: "workout";
             referencedColumns: ["id"];
           },
         ];

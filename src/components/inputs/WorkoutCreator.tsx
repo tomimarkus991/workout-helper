@@ -6,13 +6,12 @@ import { v4 as genUuid } from "uuid";
 
 import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "@/app-constants";
 import { ExerciseCard, FormikInput, FormikToggle, RealButton } from "@/components";
-import { useCreateExercise, useCreateWorkout, useCreateWorkoutExercise, useSession } from "@/hooks";
+import { useCreateExercise, useCreateWorkout, useSession } from "@/hooks";
 import { cn } from "@/lib";
 
 export const WorkoutCreator = () => {
   const { mutateAsync: createWorkout } = useCreateWorkout();
   const { mutateAsync: createExercise } = useCreateExercise();
-  const { mutateAsync: createWorkoutExercise } = useCreateWorkoutExercise();
 
   const { data: user } = useSession();
 
@@ -70,10 +69,6 @@ export const WorkoutCreator = () => {
             sets,
             rest,
             duration: typeof duration === "string" ? 0 : duration,
-          });
-          await createWorkoutExercise({
-            exercise_id: exerciseId,
-            workout_id: workoutId,
           });
         }
 

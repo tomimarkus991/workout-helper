@@ -36,16 +36,6 @@ export const useDeleteWorkout = () => {
       }
     });
 
-    const workoutExerciseRes = await supabase
-      .from("workout_exercise")
-      .delete()
-      .match({ workout_id: id });
-
-    if (workoutExerciseRes.error) {
-      toast.error(workoutExerciseRes.error.message);
-      throw new Error(workoutExerciseRes.error.message);
-    }
-
     const res = await supabase.from("workout").delete().match({ id });
 
     if (res.error) {
