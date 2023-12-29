@@ -22,7 +22,7 @@ const CreateExercise = yup
   });
 const CreateWorkout = yup.object().shape({
   name: yup.string().nullable().required("Name is required"),
-  averageCompletionTime: yup.number().nullable().min(0),
+  averageCompletionTime: yup.number().min(0).default(0),
   image: yup.string().nullable(),
   sequentialSets: yup.boolean().nullable().default(true),
   exercises: yup.array().of(CreateExercise).default([]).required("Exercises are required"),

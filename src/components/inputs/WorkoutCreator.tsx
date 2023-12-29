@@ -69,6 +69,7 @@ export const WorkoutCreator = () => {
             sets,
             rest,
             duration: typeof duration === "string" ? 0 : duration,
+            workout_id: workoutId,
           });
         }
 
@@ -89,7 +90,7 @@ export const WorkoutCreator = () => {
             <div className="flex space-x-1">
               <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
               <FormikInput
-                name="time"
+                name="averageCompletionTime"
                 type="number"
                 placeholder="60"
                 label="Average completion (min)"

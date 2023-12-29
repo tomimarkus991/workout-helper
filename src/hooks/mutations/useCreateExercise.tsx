@@ -13,6 +13,7 @@ export const useCreateExercise = () => {
     sets,
     rest,
     duration,
+    workout_id,
   }: Database["public"]["Tables"]["exercise"]["Insert"]) => {
     const res = await supabase.from("exercise").insert({
       id,
@@ -22,6 +23,7 @@ export const useCreateExercise = () => {
       sets,
       rest,
       duration,
+      workout_id,
     });
 
     if (res.error) {

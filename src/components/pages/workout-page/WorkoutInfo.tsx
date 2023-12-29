@@ -25,12 +25,12 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { data: workout } = useGetWorkout(id);
   const { mutate: deleteWorkout } = useDeleteWorkout();
   return (
-    <div className="flex flex-col min-h-screen max-w-md m-auto p-4">
+    <div className="flex flex-col max-w-md min-h-screen p-4 m-auto">
       <div className="flex flex-row items-center ml-3 mr-6">
         <Link to="/">
           <HiArrowLeft className="mr-4 cursor-pointer size-7 fill-white hover:fill-gray-200" />
         </Link>
-        <p className="text-4xl font-semibold text-center">{workout?.workout_name}</p>
+        <p className="text-3xl font-semibold text-center">{workout?.workout_name}</p>
 
         <div className="ml-auto">
           <Popover>

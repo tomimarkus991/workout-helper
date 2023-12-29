@@ -14,7 +14,7 @@ export interface Database {
           rest: number;
           sets: number;
           updated_at: string | null;
-          workout_id: string | null;
+          workout_id: string;
         };
         Insert: {
           created_at?: string | null;
@@ -26,7 +26,7 @@ export interface Database {
           rest: number;
           sets: number;
           updated_at?: string | null;
-          workout_id?: string | null;
+          workout_id: string;
         };
         Update: {
           created_at?: string | null;
@@ -38,7 +38,7 @@ export interface Database {
           rest?: number;
           sets?: number;
           updated_at?: string | null;
-          workout_id?: string | null;
+          workout_id?: string;
         };
         Relationships: [
           {

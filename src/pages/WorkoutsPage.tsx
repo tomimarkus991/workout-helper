@@ -38,7 +38,7 @@ export const WorkoutsPage = () => {
   }
 
   return (
-    <div className="max-w-md mt-5 mb-24 m-auto">
+    <div className="max-w-md m-auto mt-5 mb-24">
       <div className="mx-4">
         {workouts?.map(workout => (
           <WorkoutCard
@@ -46,7 +46,7 @@ export const WorkoutsPage = () => {
             id={workout.id}
             name={workout.workout_name}
             image={workout.image}
-            averageCompletionTime={workout.average_completion_time}
+            averageCompletionTime={workout.average_completion_time || 0}
           />
         ))}
         <Link to="/create-workout">
