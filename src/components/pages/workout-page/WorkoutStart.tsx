@@ -70,7 +70,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     }
 
     return () => clearInterval(interval);
-  }, [isResting]);
+  }, [isResting, isAudioEnabled]);
 
   useEffect(() => {
     let interval: any;
@@ -90,7 +90,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     }
 
     return () => clearInterval(interval);
-  }, [currentExercise?.duration, isResting]);
+  }, [currentExercise?.duration, isResting, isAudioEnabled]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -139,7 +139,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     return (
       <div className="mt-40 text-center">
         <p className="text-2xl">Workout Complete</p>
-        <p className="text-2xl my-6">Time: {formatTime(totalWorkoutTime, "HH:mm:ss")}</p>
+        <p className="my-6 text-2xl">Time: {formatTime(totalWorkoutTime, "HH:mm:ss")}</p>
         <RealButton variant="blue" onClick={() => setIsWorkingOut(false)}>
           Back
         </RealButton>
@@ -148,7 +148,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen max-w-md mx-auto">
+    <div className="flex flex-col max-w-md min-h-screen mx-auto">
       <div className="flex items-center justify-between p-4">
         <Link to="/">
           <HiX className="icon" />
