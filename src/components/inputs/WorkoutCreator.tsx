@@ -18,6 +18,7 @@ export const WorkoutCreator = () => {
   const [initialValues] = useState<CreateWorkoutFormValues>({
     name: "",
     averageCompletionTime: "" as unknown as number,
+    completeDurationExerciseOnEnd: false,
     sequentialSets: true,
     exercises: [],
   });
@@ -41,6 +42,7 @@ export const WorkoutCreator = () => {
         const {
           sequentialSets,
           averageCompletionTime,
+          completeDurationExerciseOnEnd,
           image = `${Math.floor(Math.random() * 11 + 1)}w.jpg`,
           exercises,
           name,
@@ -54,6 +56,7 @@ export const WorkoutCreator = () => {
           average_completion_time:
             typeof averageCompletionTime === "string" ? 0 : averageCompletionTime,
           sequential_sets: sequentialSets || true,
+          complete_duration_exercise_on_end: completeDurationExerciseOnEnd || false,
           image,
           profile_id: user?.user.id as string,
         });
@@ -97,6 +100,10 @@ export const WorkoutCreator = () => {
               />
             </div>
             <FormikToggle name="sequentialSets" disabled label="Finish one exercise's sets first" />
+            <FormikToggle
+              name="completeDurationExerciseOnEnd"
+              label="When duration exercise timer runs zero start rest"
+            />
           </div>
           <div className="space-y-2">
             {values.exercises?.map(exercise => {

@@ -51,41 +51,65 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     let interval: any;
 
     if (isResting) {
-      let localCountdown = currentExercise.rest;
-      setRestCountdown(localCountdown);
+      setRestCountdown(currentExercise.rest);
 
       interval = setInterval(() => {
-        localCountdown -= 1;
-        setRestCountdown(localCountdown);
+        setRestCountdown(countdown => {
+          if (countdown > 1) {
+            if (countdown === 6 && isAudioEnabled) FiveSec.play();
+            return countdown - 1;
+          }
 
-        if (localCountdown > 0) {
-          if (localCountdown === 5 && isAudioEnabled) FiveSec.play();
-          if (localCountdown <= 0 && isAudioEnabled) Complete.play();
-        } else {
-          // Stop resting when countdown hits 0
+          if (countdown === 1 && isAudioEnabled) Complete.play();
           setIsResting(false);
           clearInterval(interval);
-        }
+          return 0;
+        });
       }, 1000);
     }
 
     return () => clearInterval(interval);
   }, [isResting, isAudioEnabled]);
 
+  const handleCompleteExercise = () => {
+    if (currentSet < currentExercise.sets) {
+      setCurrentSet(currentSet + 1);
+
+      setRestCountdown(currentExercise?.rest || 0);
+      setIsResting(true);
+      // else (when the last set ends): go to next exercise
+    } else {
+      const nextIndex = currentExerciseIndex + 1;
+      if (nextIndex < workout!.exercise.length) {
+        setCurrentExerciseIndex(nextIndex);
+        setCurrentSet(1);
+      }
+      // when switching to next exercise, start rest countdown
+      setRestCountdown(currentExercise?.rest || 0);
+      setIsResting(true);
+    }
+  };
+
   useEffect(() => {
     let interval: any;
 
     if (currentExercise?.duration !== 0 && !isResting) {
-      let localCountdown = currentExercise?.duration || 0;
-      setExerciseCountdown(localCountdown);
+      setExerciseCountdown(currentExercise?.duration || 0);
 
       interval = setInterval(() => {
-        localCountdown -= 1;
-        setExerciseCountdown(localCountdown);
+        setExerciseCountdown(countdown => {
+          if (countdown > 1) {
+            if (countdown === 6 && isAudioEnabled) FiveSec.play();
+            return countdown - 1;
+          }
 
-        if (localCountdown === 5 && isAudioEnabled) FiveSec.play();
-        if (localCountdown <= 0 && isAudioEnabled) Complete.play();
-        if (localCountdown <= 0) clearInterval(interval);
+          if (countdown === 1 && isAudioEnabled) Complete.play();
+          if (workout?.complete_duration_exercise_on_end) {
+            handleCompleteExercise();
+          }
+          clearInterval(interval);
+          return 0;
+        });
       }, 1000);
     }
 
@@ -111,25 +135,6 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   if (error?.message) {
     navigate({ to: "/" });
   }
-
-  const handleCompleteExercise = () => {
-    if (currentSet < currentExercise.sets) {
-      setCurrentSet(currentSet + 1);
-
-      setRestCountdown(currentExercise?.rest || 0);
-      setIsResting(true);
-      // else (when the last set ends): go to next exercise
-    } else {
-      const nextIndex = currentExerciseIndex + 1;
-      if (nextIndex < workout!.exercise.length) {
-        setCurrentExerciseIndex(nextIndex);
-        setCurrentSet(1);
-      }
-      // when switching to next exercise, start rest countdown
-      setRestCountdown(currentExercise?.rest || 0);
-      setIsResting(true);
-    }
-  };
 
   if (isLoading && !workout && !currentExercise) {
     return <p>Loading...</p>;
@@ -202,7 +207,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         )}
       </div>
 
-      {!nextExercise && currentExercise.sets === currentSet ? (
+      {!nextExercise && currentExercise.sets === currentSet && !isResting ? (
         <>
           <div className="p-4 mt-auto bg-slate-800">
             <p className="text-2xl font-semibold text-center">Last set</p>
@@ -288,9 +293,33 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               </RealButton>
             </div>
           ) : (
-            <RealButton className="w-full mt-4" variant="blue" onClick={handleCompleteExercise}>
-              {currentSet < currentExercise.sets ? "Complete set" : "Complete exercise"}
-            </RealButton>
+            <>
+              {currentExercise.duration !== 0 ? (
+                <div className="flex flex-row justify-between mt-4">
+                  <RealButton
+                    className="px-2 w-14"
+                    variant="blue"
+                    onClick={() => setExerciseCountdown(prev => Math.max(prev - 10, 0))}
+                  >
+                    -10
+                  </RealButton>
+                  <RealButton variant="blue" onClick={handleCompleteExercise}>
+                    {currentSet < currentExercise.sets ? "Complete set" : "Complete exercise"}
+                  </RealButton>
+                  <RealButton
+                    className="px-2 w-14"
+                    variant="blue"
+                    onClick={() => setExerciseCountdown(prev => prev + 10)}
+                  >
+                    +10
+                  </RealButton>
+                </div>
+              ) : (
+                <RealButton className="w-full mt-4" variant="blue" onClick={handleCompleteExercise}>
+                  {currentSet < currentExercise.sets ? "Complete set" : "Complete exercise"}
+                </RealButton>
+              )}
+            </>
           )}
         </div>
       )}

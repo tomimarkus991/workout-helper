@@ -13,6 +13,7 @@ export const useCreateWorkout = () => {
     id,
     average_completion_time,
     image,
+    complete_duration_exercise_on_end,
     profile_id,
     sequential_sets,
   }: Database["public"]["Tables"]["workout"]["Insert"]) => {
@@ -20,6 +21,7 @@ export const useCreateWorkout = () => {
       id,
       workout_name,
       average_completion_time,
+      complete_duration_exercise_on_end,
       image,
       profile_id,
       sequential_sets,

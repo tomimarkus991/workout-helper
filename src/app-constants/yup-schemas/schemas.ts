@@ -26,6 +26,7 @@ const CreateWorkout = yup.object().shape({
   image: yup.string().nullable(),
   sequentialSets: yup.boolean().nullable().default(true),
   exercises: yup.array().of(CreateExercise).default([]).required("Exercises are required"),
+  completeDurationExerciseOnEnd: yup.boolean().nullable().default(false),
 });
 
 const Login = yup.object().shape({

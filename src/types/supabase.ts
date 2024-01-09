@@ -82,6 +82,7 @@ export interface Database {
       workout: {
         Row: {
           average_completion_time: number | null;
+          complete_duration_exercise_on_end: boolean;
           created_at: string | null;
           id: string;
           image: string | null;
@@ -92,6 +93,7 @@ export interface Database {
         };
         Insert: {
           average_completion_time?: number | null;
+          complete_duration_exercise_on_end?: boolean;
           created_at?: string | null;
           id: string;
           image?: string | null;
@@ -102,6 +104,7 @@ export interface Database {
         };
         Update: {
           average_completion_time?: number | null;
+          complete_duration_exercise_on_end?: boolean;
           created_at?: string | null;
           id?: string;
           image?: string | null;
