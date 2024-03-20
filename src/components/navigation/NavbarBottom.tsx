@@ -6,9 +6,9 @@ import { animations, AnimationWrapper } from "@/components";
 export const NavbarBottom = () => (
   <div className="flex fixed bottom-0 z-40 max-w-md items-center py-4 m-2 w-[95%] h-fit bg-slate-800 rounded-md shadow-2xl">
     <div className="flex flex-row justify-around w-full">
-      <Link to="/notes">
+      <Link to="/notes" disabled>
         <AnimationWrapper variants={animations.smallScale} key="nb-home-icon">
-          <FaNoteSticky className="icon-fill" />
+          <FaNoteSticky className="cursor-not-allowed icon-fill opacity-60" />
         </AnimationWrapper>
       </Link>
       <Link to="/">
@@ -17,9 +17,9 @@ export const NavbarBottom = () => (
           <FaFootball className="icon-fill" />
         </AnimationWrapper>
       </Link>
-      <Link to="/profile">
+      <Link to="/profile" disabled>
         <AnimationWrapper variants={animations.smallScale} key="nb-chart-icon">
-          <FaUser className="icon-fill" />
+          <FaUser className="cursor-not-allowed icon-fill opacity-60" />
         </AnimationWrapper>
       </Link>
     </div>

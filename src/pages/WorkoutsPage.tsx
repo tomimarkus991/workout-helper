@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { FiPlusCircle } from "react-icons/fi";
 
-import { NavbarBottom, RealButton, WorkoutCard } from "@/components";
+import { RealButton, WorkoutCard } from "@/components";
 import { useUser, useGetWorkouts } from "@/hooks";
 
 export const WorkoutsPage = () => {
@@ -54,7 +54,7 @@ export const WorkoutsPage = () => {
         </Link>
       </div>
 
-      <NavbarBottom />
+      {/* <NavbarBottom /> */}
     </div>
   );
 };
