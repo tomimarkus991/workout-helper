@@ -38,7 +38,7 @@ export const WorkoutsPage = () => {
   }
 
   return (
-    <div className="max-w-md m-auto mt-5 mb-24">
+    <div className="max-w-md m-auto mt-1 mb-24">
       <div className="mx-4">
         {workouts?.map(workout => (
           <WorkoutCard
@@ -50,7 +50,7 @@ export const WorkoutsPage = () => {
           />
         ))}
         <Link to="/create-workout">
-          <FiPlusCircle className="mx-auto mt-2 cursor-pointer icon size-14" />
+          <FiPlusCircle className="mx-auto mt-2 cursor-pointer icon size-20" />
         </Link>
       </div>
 

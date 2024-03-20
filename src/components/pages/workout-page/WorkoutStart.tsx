@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-// import { NativeAudio } from "@capacitor-community/native-audio";
+
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { add, format, setHours } from "date-fns";
 import { useEffect, useState } from "react";
@@ -8,13 +8,15 @@ import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
 import { RealButton } from "@/components";
 import { useGetWorkout } from "@/hooks";
 
+import { initSounds, playSound, setVolume, stopSound } from "../../../services/sound";
+
 interface Props {
   isWorkingOut: boolean;
   setIsWorkingOut: (isWorkingOut: boolean) => void;
 }
 
-const Complete = new Audio("/sounds/complete.wav");
-const FiveSec = new Audio("/sounds/5-sec.mp3");
+initSounds();
+setVolume();
 
 export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { id } = useParams({ strict: false });
@@ -56,11 +58,11 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
       interval = setInterval(() => {
         setRestCountdown(countdown => {
           if (countdown > 1) {
-            if (countdown === 6 && isAudioEnabled) FiveSec.play();
+            if (countdown === 6 && isAudioEnabled) playSound("ending");
             return countdown - 1;
           }
 
-          if (countdown === 1 && isAudioEnabled) Complete.play();
+          if (countdown === 1 && isAudioEnabled) playSound("complete");
           setIsResting(false);
           clearInterval(interval);
           return 0;
@@ -99,11 +101,11 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
       interval = setInterval(() => {
         setExerciseCountdown(countdown => {
           if (countdown > 1) {
-            if (countdown === 6 && isAudioEnabled) FiveSec.play();
+            if (countdown === 6 && isAudioEnabled) playSound("ending");
             return countdown - 1;
           }
 
-          if (countdown === 1 && isAudioEnabled) Complete.play();
+          if (countdown === 1 && isAudioEnabled) playSound("complete");
           if (workout?.complete_duration_exercise_on_end) {
             handleCompleteExercise();
           }
@@ -126,7 +128,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     }
 
     if (isWorkoutFinished) {
-      FiveSec.pause();
+      stopSound("ending");
     }
 
     return () => clearInterval(interval);
@@ -217,7 +219,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               variant="blue"
               onClick={() => {
                 setIsWorkoutFinished(true);
-                if (isAudioEnabled) Complete.play();
+                if (isAudioEnabled) stopSound("complete");
               }}
             >
               Complete workout
@@ -297,17 +299,17 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               {currentExercise.duration !== 0 ? (
                 <div className="flex flex-row justify-between mt-4">
                   <RealButton
-                    className="px-2 w-14"
+                    className="w-12 px-2"
                     variant="blue"
                     onClick={() => setExerciseCountdown(prev => Math.max(prev - 10, 0))}
                   >
                     -10
                   </RealButton>
                   <RealButton variant="blue" onClick={handleCompleteExercise}>
-                    {currentSet < currentExercise.sets ? "Complete set" : "Complete exercise"}
+                    {currentSet < currentExercise.sets ? "Complete set" : "Complete"}
                   </RealButton>
                   <RealButton
-                    className="px-2 w-14"
+                    className="w-12 px-2"
                     variant="blue"
                     onClick={() => setExerciseCountdown(prev => prev + 10)}
                   >
@@ -316,7 +318,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 </div>
               ) : (
                 <RealButton className="w-full mt-4" variant="blue" onClick={handleCompleteExercise}>
-                  {currentSet < currentExercise.sets ? "Complete set" : "Complete exercise"}
+                  {currentSet < currentExercise.sets ? "Complete set" : "Complete"}
                 </RealButton>
               )}
             </>
