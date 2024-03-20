@@ -173,8 +173,8 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
       </div>
 
       <div className="p-4">
-        <div className="relative text-center">
-          {!isResting && (
+        <div className="relative mt-32 text-center">
+          {/* {!isResting && (
             <img
               alt="Exercise"
               className="w-full h-[200px] relative"
@@ -184,7 +184,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 objectFit: "cover",
               }}
             />
-          )}
+          )} */}
 
           {isResting && (
             <p className="mt-32 text-5xl font-bold font-number">{formatTime(restCountdown)}</p>
@@ -201,7 +201,9 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
             {currentExercise.reps !== 0 && (
               <p className="text-2xl font-bold">{currentExercise.reps} reps</p>
             )}
-            <p className="text-2xl font-semibold">{currentExercise.exercise_name}</p>
+            <p className="max-w-xs mx-auto mt-4 text-2xl font-semibold">
+              {currentExercise.exercise_name}
+            </p>
             <p className="mt-5 text-3xl font-semibold">
               Set {currentSet + currentExercise.sets - currentExercise.sets}
             </p>
@@ -228,17 +230,17 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         </>
       ) : (
         <div className="p-4 mt-auto bg-slate-800">
-          <p className="tracking-wide uppercase text-slate-100">next up</p>
+          <p className="tracking-wide uppercase ml-7 text-slate-100">next up</p>
           {currentSet < currentExercise.sets ? (
             <div className="flex items-center p-3">
-              <img
+              {/* <img
                 alt="Exercise"
                 className="size-14"
                 src="/general/placeholder.svg"
                 style={{
                   objectFit: "cover",
                 }}
-              />
+              /> */}
               <div className="ml-4">
                 <p className="text-lg font-semibold">{currentExercise.exercise_name}</p>
                 <p className="text-sm text-gray-600">
@@ -250,14 +252,14 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
             </div>
           ) : (
             <div className="flex items-center p-3">
-              <img
+              {/* <img
                 alt="Exercise"
                 className="size-14"
                 src="/general/placeholder.svg"
                 style={{
                   objectFit: "cover",
                 }}
-              />
+              /> */}
               <div className="ml-4">
                 {isResting ? (
                   <>
