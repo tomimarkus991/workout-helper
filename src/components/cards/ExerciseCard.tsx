@@ -17,7 +17,7 @@ export const ExerciseCard = ({ duration, reps, rest, sets, name }: Props) => {
           <p>{reps === 0 && duration > 0 ? `${duration}s` : `${reps} reps`}</p>
           <p className="ml-3 mr-2 whitespace-normal">{name}</p>
         </div>
-        {rest < 60 ? <p>{rest} sec rest</p> : <p>{secondsToMinutes(rest)} min rest</p>}
+        {rest < 60 ? <p>{rest}s rest</p> : <p>{secondsToMinutes(rest)}m rest</p>}
       </div>
     </div>
   );
