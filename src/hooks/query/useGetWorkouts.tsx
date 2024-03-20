@@ -13,7 +13,14 @@ export const useGetWorkouts = () => {
 
     const { data, error } = await supabase
       .from("workout")
-      .select("*")
+      .select(
+        `
+      *,
+      workout_statistic (
+        completion_time
+      )
+      `,
+      )
       .eq("profile_id", user?.session?.user.id as string);
 
     if (error) {

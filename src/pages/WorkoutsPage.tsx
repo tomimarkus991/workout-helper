@@ -4,6 +4,26 @@ import { FiPlusCircle } from "react-icons/fi";
 import { RealButton, WorkoutCard } from "@/components";
 import { useUser, useGetWorkouts } from "@/hooks";
 
+type WorkoutStatistics = {
+  completion_time: number | null;
+};
+
+const calculateAverageWorkoutCompletionTime = (workoutStatistics: WorkoutStatistics[]) => {
+  if (!Array.isArray(workoutStatistics) || workoutStatistics.length === 0) {
+    return 0; // or handle the case appropriately
+  }
+
+  const totalCompletionTime = workoutStatistics.reduce(
+    (accumulator, currentStatistic) => accumulator + (currentStatistic.completion_time || 0),
+    0,
+  );
+
+  const averageCompletionTimeInSeconds = totalCompletionTime / workoutStatistics.length;
+  const averageCompletionTimeInMinutes = averageCompletionTimeInSeconds / 60;
+
+  return Math.round(averageCompletionTimeInMinutes) || 0;
+};
+
 export const WorkoutsPage = () => {
   const { data: user } = useUser();
   const { data: workouts, isLoading } = useGetWorkouts();
@@ -46,7 +66,7 @@ export const WorkoutsPage = () => {
             id={workout.id}
             name={workout.workout_name}
             image={workout.image}
-            averageCompletionTime={workout.average_completion_time || 0}
+            averageCompletionTime={calculateAverageWorkoutCompletionTime(workout.workout_statistic)}
           />
         ))}
         <Link to="/create-workout">

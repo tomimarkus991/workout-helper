@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
 
 import { RealButton } from "@/components";
-import { useGetWorkout } from "@/hooks";
+import { useCreateWorkoutStatistic, useGetWorkout } from "@/hooks";
 
 import { initSounds, playSound, setVolume, stopSound } from "../../../services/sound";
 
@@ -23,6 +23,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
   const { data: workout, isLoading, error } = useGetWorkout(id);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  const { mutate: createWorkoutStatistic } = useCreateWorkoutStatistic();
 
   const navigate = useNavigate();
 
@@ -221,6 +222,12 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               variant="blue"
               onClick={() => {
                 setIsWorkoutFinished(true);
+
+                createWorkoutStatistic({
+                  workout_id: workout?.id || "",
+                  completion_time: totalWorkoutTime,
+                });
+
                 if (isAudioEnabled) stopSound("complete");
               }}
             >
