@@ -5,10 +5,9 @@ import { add, format, setHours } from "date-fns";
 import { useEffect, useState } from "react";
 import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
 
-import { RealButton } from "@/components";
-import { useCreateWorkoutStatistic, useGetWorkout } from "@/hooks";
-
+import { useGetWorkout, useCreateWorkoutStatistic } from "../../../hooks";
 import { initSounds, playSound, setVolume, stopSound } from "../../../services/sound";
+import { RealButton } from "../../button";
 
 interface Props {
   isWorkingOut: boolean;

@@ -2,9 +2,9 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Form, Formik } from "formik";
 import { toast } from "react-hot-toast";
 
-import { YupSchemas } from "@/app-constants";
-import { FormikInput, RealButton } from "@/components";
-import { supabase } from "@/utils";
+import { YupSchemas } from "../app-constants";
+import { FormikInput, RealButton } from "../components";
+import { supabase } from "../utils";
 
 interface FormValues {
   username: string;

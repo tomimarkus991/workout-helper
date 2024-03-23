@@ -17,15 +17,14 @@ import { createRoot } from "react-dom/client";
 import { Toaster } from "react-hot-toast";
 
 import {
-  CreateWorkoutPage,
-  LoginPage,
-  NotesPage,
-  ProfilePage,
-  RegisterPage,
-  WorkoutPage,
   WorkoutsPage,
-} from "@/pages";
-
+  LoginPage,
+  RegisterPage,
+  ProfilePage,
+  NotesPage,
+  WorkoutPage,
+  CreateWorkoutPage,
+} from "./pages";
 import { supabase } from "./utils";
 
 setDefaultOptions({ locale: et });

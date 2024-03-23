@@ -13,8 +13,8 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "android:open": "ionic cap open android",
-    "android:run": "ionic cap run android --target 9a6d1192 --livereload",
-    "android:live:reload": "ionic cap run android -l --external --target 9a6d1192",
+    "android:run": "ionic cap run android --target 9a6d1192 --livereload --external --port=3000 --public-host=192.168.0.19",
+    "android:run:u": "ionic cap run android --target S95PROEEA0000013070 --livereload --external --port=3000 --public-host=192.168.0.19",
     "build:app": "npm run build && npx cap sync",
     "ionic:build": "npm run build",
     "ionic:serve": "npm run start",
@@ -79,7 +79,6 @@
     "vite": "^5.0.10",
     "vite-plugin-checker": "^0.6.2",
     "vite-plugin-pwa": "^0.17.4",
-    "vite-tsconfig-paths": "^4.2.2",
     "vitest": "^1.1.0"
   },
   "lint-staged": {

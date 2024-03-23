@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
-import { Database } from "@/types";
-import { supabase } from "@/utils";
+import { Database } from "../../types";
+import { supabase } from "../../utils";
 
 export const useCreateWorkoutStatistic = () => {
   const execute = async ({

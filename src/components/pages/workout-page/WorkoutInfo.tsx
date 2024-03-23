@@ -1,18 +1,13 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
 import { Link, useParams } from "@tanstack/react-router";
 import { BsThreeDots } from "react-icons/bs";
 import { HiArrowLeft } from "react-icons/hi";
 
-import {
-  AnimationWrapper,
-  ExerciseCard,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  RealButton,
-  animations,
-} from "@/components";
-import { useDeleteWorkout, useGetWorkout } from "@/hooks";
+import { useGetWorkout, useDeleteWorkout } from "../../../hooks";
+import { AnimationWrapper, animations } from "../../animations";
+import { RealButton } from "../../button";
+import { ExerciseCard } from "../../cards";
 
 interface Props {
   isWorkingOut: boolean;

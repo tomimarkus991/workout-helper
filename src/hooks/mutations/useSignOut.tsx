@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "react-hot-toast";
 
-import { supabase } from "utils";
+import { supabase } from "../../utils";
 
 export const useSignOut = () => {
   const navigate = useNavigate();

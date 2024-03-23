@@ -1,5 +1,5 @@
-import { RealButton } from "@/components";
-import { useSignOut } from "@/hooks";
+import { RealButton } from "../components";
+import { useSignOut } from "../hooks";
 
 export const ProfilePage = () => {
   const { mutate } = useSignOut();

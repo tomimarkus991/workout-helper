@@ -1,4 +1,4 @@
-import { WorkoutCreator } from "@/components";
+import { WorkoutCreator } from "../components";
 
 export const CreateWorkoutPage = () => {
   return (

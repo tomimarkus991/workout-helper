@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
-import { supabase } from "@/utils";
+import { supabase } from "../../utils";
 
 export const useGetWorkout = (workoutId: string) => {
   const getQuery = async () => {

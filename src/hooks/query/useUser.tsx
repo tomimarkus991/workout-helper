@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "react-hot-toast";
 
-import { UserType } from "@/types";
-import { supabase } from "@/utils";
+import { UserType } from "../../types";
+import { supabase } from "../../utils";
 
 export const useUser = () => {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { WorkoutInfo, WorkoutStart } from "@/components";
+import { WorkoutInfo, WorkoutStart } from "../components";
 
 export const WorkoutPage = () => {
   const [isWorkingOut, setIsWorkingOut] = useState(false);

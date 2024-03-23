@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "react-hot-toast";
 
-import { Database } from "@/types";
-import { supabase } from "@/utils";
+import { Database } from "../../types";
+import { supabase } from "../../utils";
 
 export const useCreateWorkout = () => {
   const navigate = useNavigate({ from: "/create-workout" });

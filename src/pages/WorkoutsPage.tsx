@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { FiPlusCircle } from "react-icons/fi";
 
-import { RealButton, WorkoutCard } from "@/components";
-import { useUser, useGetWorkouts } from "@/hooks";
+import { RealButton, WorkoutCard } from "../components";
+import { useUser, useGetWorkouts } from "../hooks";
 
 type WorkoutStatistics = {
   completion_time: number | null;

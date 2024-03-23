@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
-import { Workout } from "@/app-constants";
+import { Workout } from "../../app-constants";
 
 type Props = Pick<Workout, "id" | "averageCompletionTime" | "name" | "image">;
 // to={`${definedRoutes.workoutPage}/${id}`}

@@ -4,10 +4,14 @@ import { useState } from "react";
 import { HiArrowLeft } from "react-icons/hi";
 import { v4 as genUuid } from "uuid";
 
-import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "@/app-constants";
-import { ExerciseCard, FormikInput, FormikToggle, RealButton } from "@/components";
-import { useCreateExercise, useCreateWorkout, useSession } from "@/hooks";
-import { cn } from "@/lib";
+import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "../../app-constants";
+import { useCreateWorkout, useCreateExercise, useSession } from "../../hooks";
+import { cn } from "../../lib";
+import { RealButton } from "../button";
+import { ExerciseCard } from "../cards";
+
+import { FormikInput } from "./FormikInput";
+import { FormikToggle } from "./FormikToggle";
 
 export const WorkoutCreator = () => {
   const { mutateAsync: createWorkout } = useCreateWorkout();

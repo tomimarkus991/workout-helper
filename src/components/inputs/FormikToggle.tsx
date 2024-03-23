@@ -3,8 +3,8 @@
 import { Switch } from "@headlessui/react";
 import { useField } from "formik";
 
-import { Tooltip } from "@/components";
-import { cn } from "@/lib";
+import { cn } from "../../lib";
+import { Tooltip } from "../elements";
 
 interface Props {
   pressed: boolean;
