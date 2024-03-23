@@ -48,7 +48,7 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         </div>
       </div>
       <div>
-        <p className="mt-6 text-2xl font-semibold">Exercises</p>
+        <p className="mt-6 mb-3 text-2xl font-semibold">Exercises</p>
         <div className="space-y-2">
           {workout?.exercise.map(exercise => {
             return (
