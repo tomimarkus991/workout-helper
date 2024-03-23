@@ -109,10 +109,11 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
           if (workout?.complete_duration_exercise_on_end) {
             handleCompleteExercise();
           }
-          clearInterval(interval);
           return 0;
         });
       }, 1000);
+    } else {
+      clearInterval(interval);
     }
 
     return () => clearInterval(interval);
