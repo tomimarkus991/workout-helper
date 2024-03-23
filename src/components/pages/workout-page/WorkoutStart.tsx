@@ -201,7 +201,9 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
           {!isResting && (
             <div className="mt-4 mb-2 text-center md:text-center">
               {currentExercise.reps !== 0 && (
-                <p className="text-3xl font-bold">{currentExercise.reps} reps</p>
+                <p className="text-3xl font-bold">
+                  {currentExercise.reps === 999 ? "Max" : currentExercise.reps} reps
+                </p>
               )}
               <p className="max-w-xs mx-auto mt-4 text-3xl font-semibold md:max-w-none md:mx-auto">
                 {currentExercise.exercise_name}
