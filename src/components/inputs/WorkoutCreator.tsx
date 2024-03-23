@@ -103,10 +103,10 @@ export const WorkoutCreator = () => {
                 label="Average completion (min)"
               />
             </div>
-            <FormikToggle name="sequentialSets" disabled label="Finish one exercise's sets first" />
+            {/* <FormikToggle name="sequentialSets" disabled label="Finish one exercise's sets first" /> */}
             <FormikToggle
               name="completeDurationExerciseOnEnd"
-              label="When duration exercise timer runs zero start rest"
+              label="Start rest immediately after exercise duration ends"
             />
           </div>
           <div className="space-y-2">
