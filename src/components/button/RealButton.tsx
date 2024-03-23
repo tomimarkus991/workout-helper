@@ -73,7 +73,7 @@ export const realButtonVariants = cva(
         xs: `py-2 px-4 text-sm rounded-2xl`,
         sm: `py-2 px-10 text-sm rounded-2xl`,
         md: `py-2 px-14 text-sm lg:text-md rounded-2xl`,
-        lg: `py-3 px-18 text-lg rounded-2xl`,
+        lg: `py-3 px-16 text-xl rounded-2xl`,
         oneLetter: `py-3 px-5 text-md rounded-lg uppercase`,
       },
       focus: {

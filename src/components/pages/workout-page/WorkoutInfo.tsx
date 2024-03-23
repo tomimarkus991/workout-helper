@@ -59,9 +59,16 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
           })}
         </div>
       </div>
-      <RealButton className="mt-auto" variant="blue" onClick={() => setIsWorkingOut(!isWorkingOut)}>
-        Start workout
-      </RealButton>
+      <div className="mx-auto mt-auto">
+        <RealButton
+          className="mt-4"
+          variant="blue"
+          size="lg"
+          onClick={() => setIsWorkingOut(!isWorkingOut)}
+        >
+          Start workout
+        </RealButton>
+      </div>
     </div>
   );
 };
