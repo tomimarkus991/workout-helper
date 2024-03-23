@@ -111,6 +111,8 @@ export const WorkoutCreator = () => {
           </div>
           <div className="space-y-2">
             {values.exercises?.map(exercise => {
+              console.log(values);
+
               return (
                 <ExerciseCard
                   key={exercise.exercise}

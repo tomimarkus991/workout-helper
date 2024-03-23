@@ -2,7 +2,7 @@ import { secondsToMinutes } from "date-fns";
 
 interface Props {
   sets: number;
-  reps: number;
+  reps: number | string;
   rest: number;
   duration: number;
   name: string;
@@ -15,7 +15,9 @@ export const ExerciseCard = ({ duration, reps, rest, sets, name }: Props) => {
         <div className="flex flex-row items-center">
           <p>{sets}x</p>
           <p>
-            {reps === 0 && duration > 0 ? `${duration}s` : `${reps === 999 ? "Max" : reps} reps`}
+            {(reps === 0 || reps === "") && duration > 0
+              ? `${duration}s`
+              : `${reps === 999 ? "Max" : reps} reps`}
           </p>
           <p className="ml-3 mr-2 whitespace-normal">{name}</p>
         </div>
