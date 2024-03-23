@@ -13,7 +13,7 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "android:open": "ionic cap open android",
-    "android:run": "ionic cap run android --target 9a6d1192",
+    "android:run": "ionic cap run android --target 9a6d1192 --livereload",
     "android:live:reload": "ionic cap run android -l --external --target 9a6d1192",
     "build:app": "npm run build && npx cap sync",
     "ionic:build": "npm run build",
