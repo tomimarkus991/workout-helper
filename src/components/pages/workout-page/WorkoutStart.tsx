@@ -136,7 +136,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   }
 
   return (
-    <div className="flex flex-col max-w-md min-h-screen mx-auto sm:max-w-2xl">
+    <div className="flex flex-col max-w-md min-h-screen mx-auto sm:max-w-3xl">
       <div className="flex items-center justify-between p-4">
         <Link to="/">
           <HiX className="icon" />
@@ -157,7 +157,10 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         <div className="p-4">
           <div className="relative mt-32 text-center sm:mt-14">
             {isResting && (
-              <p className="mt-32 text-5xl font-bold font-number">{formatTime(restCountdown)}</p>
+              <div>
+                <p className="mt-32 text-5xl font-semibold">Resting</p>
+                <p className="mt-6 text-6xl font-bold font-number">{formatTime(restCountdown)}</p>
+              </div>
             )}
             {currentExercise.duration !== 0 && !isResting && (
               <p className="z-10 mt-6 text-4xl font-bold font-number">
@@ -217,14 +220,16 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                         <p className="text-xl text-gray-100">Set {currentExercise?.sets}</p>
                         <p className="text-xl text-gray-100">
                           {currentExercise?.reps !== 0
-                            ? `${currentExercise?.reps} reps`
+                            ? `${
+                                currentExercise?.reps === 999 ? "Max" : currentExercise?.reps
+                              } reps`
                             : `${currentExercise.duration}s`}
                         </p>
                       </div>
                     ) : (
                       <p className="text-xl text-gray-100">
                         {currentExercise?.reps !== 0
-                          ? `${currentExercise?.reps} reps`
+                          ? `${currentExercise?.reps === 999 ? "Max" : currentExercise?.reps} reps`
                           : `${currentExercise.duration}s`}
                       </p>
                     )}
@@ -237,14 +242,16 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                         <p className="text-xl text-gray-100">Set {nextExercise?.sets}</p>
                         <p className="text-xl text-gray-100">
                           {currentExercise?.reps !== 0
-                            ? `${currentExercise?.reps} reps`
+                            ? `${
+                                currentExercise?.reps === 999 ? "Max" : currentExercise?.reps
+                              } reps`
                             : `${currentExercise.duration}s`}
                         </p>
                       </div>
                     ) : (
                       <p className="text-xl text-gray-100">
                         {nextExercise?.reps !== 0
-                          ? `${nextExercise?.reps} reps`
+                          ? `${nextExercise?.reps === 999 ? "Max" : nextExercise?.reps} reps`
                           : `${nextExercise.duration}s`}
                       </p>
                     )}
