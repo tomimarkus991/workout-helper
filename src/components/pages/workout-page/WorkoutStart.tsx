@@ -214,7 +214,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               <div className="ml-4">
                 {isResting ? (
                   <>
-                    <p className="text-xl font-semibold">{currentExercise?.exercise_name}</p>
+                    <p className="text-2xl font-semibold">{currentExercise?.exercise_name}</p>
                     {workout?.sequential_sets ? (
                       <div className="flex flex-row space-x-6">
                         <p className="text-xl text-gray-100">Set {currentExercise?.sets}</p>
@@ -241,11 +241,9 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                       <div className="flex flex-row space-x-6">
                         <p className="text-xl text-gray-100">Set {nextExercise?.sets}</p>
                         <p className="text-xl text-gray-100">
-                          {currentExercise?.reps !== 0
-                            ? `${
-                                currentExercise?.reps === 999 ? "Max" : currentExercise?.reps
-                              } reps`
-                            : `${currentExercise.duration}s`}
+                          {nextExercise?.reps !== 0
+                            ? `${nextExercise?.reps === 999 ? "Max" : nextExercise?.reps} reps`
+                            : `${nextExercise?.duration}s`}
                         </p>
                       </div>
                     ) : (
