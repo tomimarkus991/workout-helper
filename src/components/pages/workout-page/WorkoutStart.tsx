@@ -136,7 +136,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   }
 
   return (
-    <div className="flex flex-col max-w-md min-h-screen mx-auto md:max-w-2xl">
+    <div className="flex flex-col max-w-md min-h-screen mx-auto sm:max-w-2xl">
       <div className="flex items-center justify-between p-4">
         <Link to="/">
           <HiX className="icon" />
@@ -153,9 +153,9 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-col flex-grow md:flex-grow-0 md:flex-row md:justify-evenly">
+      <div className="flex flex-col flex-grow sm:flex-grow-0 sm:flex-row sm:justify-evenly">
         <div className="p-4">
-          <div className="relative mt-32 text-center md:mt-14">
+          <div className="relative mt-32 text-center sm:mt-14">
             {isResting && (
               <p className="mt-32 text-5xl font-bold font-number">{formatTime(restCountdown)}</p>
             )}
@@ -167,13 +167,13 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
           </div>
 
           {!isResting && (
-            <div className="mt-4 mb-2 text-center md:text-center">
+            <div className="mt-4 mb-2 text-center sm:text-center">
               {currentExercise.reps !== 0 && (
                 <p className="text-3xl font-bold">
                   {currentExercise.reps === 999 ? "Max" : currentExercise.reps} reps
                 </p>
               )}
-              <p className="max-w-xs mx-auto mt-4 text-3xl font-semibold md:max-w-none md:mx-auto">
+              <p className="max-w-xs mx-auto mt-4 text-3xl font-semibold sm:max-w-none sm:mx-auto">
                 {currentExercise.exercise_name}
               </p>
               <p className="mt-5 text-3xl font-semibold">Set {currentExercise.sets}</p>
@@ -205,13 +205,13 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
             </div>
           </>
         ) : (
-          <div className="p-4 mt-auto overflow-x-scroll bg-slate-800 md:rounded-xl">
-            <p className="text-xl tracking-wide uppercase ml-7 text-slate-100">next up</p>
-            <div className="flex items-center p-3">
+          <div className="p-4 mt-auto overflow-x-scroll bg-slate-800 sm:rounded-xl">
+            <p className="mb-1 ml-4 text-xl tracking-wide uppercase text-slate-100">next up</p>
+            <div className="flex items-center">
               <div className="ml-4">
                 {isResting ? (
                   <>
-                    <p className="text-3xl font-semibold">{currentExercise?.exercise_name}</p>
+                    <p className="text-xl font-semibold">{currentExercise?.exercise_name}</p>
                     {workout?.sequential_sets ? (
                       <div className="flex flex-row space-x-6">
                         <p className="text-xl text-gray-100">Set {currentExercise?.sets}</p>
@@ -231,7 +231,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                   </>
                 ) : (
                   <>
-                    <p className="text-3xl font-semibold">{nextExercise?.exercise_name}</p>
+                    <p className="mb-3 text-2xl font-semibold">{nextExercise?.exercise_name}</p>
                     {workout?.sequential_sets ? (
                       <div className="flex flex-row space-x-6">
                         <p className="text-xl text-gray-100">Set {nextExercise?.sets}</p>
