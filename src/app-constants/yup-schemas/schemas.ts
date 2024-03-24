@@ -16,6 +16,14 @@ const CreateExercise = yup
   })
   .test("reps-duration", "Either reps or duration can be set", function (value) {
     const { reps, duration } = value;
+
+    if (reps === 0 && duration === 0) {
+      return this.createError({
+        message: "Either reps or duration has to be set",
+        path: "reps",
+      });
+    }
+
     if (reps && duration) {
       return this.createError({
         message: "Either reps or duration can be set",
