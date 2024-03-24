@@ -287,20 +287,22 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
             )}
 
             <div className="flex flex-row justify-between mt-4">
-              <RealButton
-                className="w-0"
-                size="lg"
-                variant="blue"
-                onClick={() => {
-                  if (isResting) {
-                    setRestCountdown(prev => Math.max(prev - 10, 0));
-                  } else {
-                    setExerciseCountdown(prev => Math.max(prev - 10, 0));
-                  }
-                }}
-              >
-                -10
-              </RealButton>
+              {(currentExercise.reps === 0 || isResting) && (
+                <RealButton
+                  className="w-0"
+                  size="lg"
+                  variant="blue"
+                  onClick={() => {
+                    if (isResting) {
+                      setRestCountdown(prev => Math.max(prev - 10, 0));
+                    } else {
+                      setExerciseCountdown(prev => Math.max(prev - 10, 0));
+                    }
+                  }}
+                >
+                  -10
+                </RealButton>
+              )}
               <RealButton
                 className="mx-auto"
                 size="lg"
@@ -315,20 +317,22 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               >
                 {isResting ? "Skip rest" : "Complete"}
               </RealButton>
-              <RealButton
-                className="w-0"
-                size="lg"
-                variant="blue"
-                onClick={() => {
-                  if (isResting) {
-                    setRestCountdown(prev => prev + 10);
-                  } else {
-                    setExerciseCountdown(prev => prev + 10);
-                  }
-                }}
-              >
-                +10
-              </RealButton>
+              {(currentExercise.reps === 0 || isResting) && (
+                <RealButton
+                  className="w-0"
+                  size="lg"
+                  variant="blue"
+                  onClick={() => {
+                    if (isResting) {
+                      setRestCountdown(prev => prev + 10);
+                    } else {
+                      setExerciseCountdown(prev => prev + 10);
+                    }
+                  }}
+                >
+                  +10
+                </RealButton>
+              )}
             </div>
           </div>
         )}
