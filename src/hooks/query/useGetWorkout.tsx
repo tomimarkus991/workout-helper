@@ -25,7 +25,37 @@ export const useGetWorkout = (workoutId: string) => {
       throw new Error(error.message);
     }
 
-    return data;
+    const modifiedExercises: typeof data.exercise = [];
+    if (data.sequential_sets) {
+      data.exercise.map(exercise => {
+        for (let setCount = 1; setCount <= exercise.sets; setCount++) {
+          modifiedExercises.push({
+            ...exercise,
+            sets: setCount,
+          });
+        }
+        return exercise;
+      });
+    } else {
+      const howManySets = data.exercise.reduce((acc, exercise) => {
+        return acc + exercise.sets;
+      }, 0);
+
+      for (let index = 0; index < howManySets; index++) {
+        const exerciseIndex = index % data.exercise.length;
+        const exercise = data.exercise[exerciseIndex];
+        const sets = Math.floor(index / data.exercise.length) + 1;
+        modifiedExercises.push({
+          ...exercise,
+          sets,
+        });
+      }
+    }
+
+    return {
+      ...data,
+      modifiedExercises,
+    };
   };
 
   return useQuery({ queryKey: ["get_workout", { workoutId }], queryFn: async () => getQuery() });

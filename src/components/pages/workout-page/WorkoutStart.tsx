@@ -27,7 +27,6 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const navigate = useNavigate();
 
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const [currentSet, setCurrentSet] = useState(1);
   const [isResting, setIsResting] = useState(false);
   const [isWorkoutFinished, setIsWorkoutFinished] = useState(false);
 
@@ -36,8 +35,8 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const [exerciseCountdown, setExerciseCountdown] = useState(0);
   const [totalWorkoutTime, setTotalWorkoutTime] = useState(0);
 
-  const currentExercise = workout?.exercise[currentExerciseIndex]!;
-  const nextExercise = workout?.exercise[currentExerciseIndex + 1];
+  const currentExercise = workout?.modifiedExercises[currentExerciseIndex]!;
+  const nextExercise = workout?.modifiedExercises[currentExerciseIndex + 1];
 
   useEffect(() => {
     let interval: any;
@@ -64,22 +63,13 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   }, [isResting, isAudioEnabled]);
 
   const handleCompleteExercise = () => {
-    if (currentSet < currentExercise.sets) {
-      setCurrentSet(currentSet + 1);
-
-      setRestCountdown(currentExercise?.rest || 0);
-      setIsResting(true);
-      // else (when the last set ends): go to next exercise
-    } else {
-      const nextIndex = currentExerciseIndex + 1;
-      if (nextIndex < workout!.exercise.length) {
-        setCurrentExerciseIndex(nextIndex);
-        setCurrentSet(1);
-      }
-      // when switching to next exercise, start rest countdown
-      setRestCountdown(currentExercise?.rest || 0);
-      setIsResting(true);
+    const nextIndex = currentExerciseIndex + 1;
+    if (nextIndex < workout!.modifiedExercises.length) {
+      setCurrentExerciseIndex(nextIndex);
     }
+    // when switching to next exercise, start rest countdown
+    setRestCountdown(currentExercise?.rest || 0);
+    setIsResting(true);
   };
 
   useEffect(() => {
@@ -186,14 +176,12 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               <p className="max-w-xs mx-auto mt-4 text-3xl font-semibold md:max-w-none md:mx-auto">
                 {currentExercise.exercise_name}
               </p>
-              <p className="mt-5 text-3xl font-semibold">
-                Set {currentSet + currentExercise.sets - currentExercise.sets}
-              </p>
+              <p className="mt-5 text-3xl font-semibold">Set {currentExercise.sets}</p>
             </div>
           )}
         </div>
 
-        {!nextExercise && currentExercise.sets === currentSet && !isResting ? (
+        {!nextExercise && !isResting ? (
           <>
             <div className="p-4 mt-auto bg-slate-800">
               <p className="text-2xl font-semibold text-center">Last set</p>
@@ -219,34 +207,51 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         ) : (
           <div className="p-4 mt-auto overflow-x-scroll bg-slate-800 md:rounded-xl">
             <p className="text-xl tracking-wide uppercase ml-7 text-slate-100">next up</p>
-            {currentSet < currentExercise.sets ? (
-              <div className="flex items-center p-3">
-                <div className="ml-4">
-                  <p className="text-2xl font-semibold">{currentExercise.exercise_name}</p>
-                  <p className="text-xl text-gray-100">
-                    {isResting
-                      ? `Next up set ${currentSet}`
-                      : `After this ${currentExercise.sets - currentSet} sets left`}
-                  </p>
-                </div>
+            <div className="flex items-center p-3">
+              <div className="ml-4">
+                {isResting ? (
+                  <>
+                    <p className="text-3xl font-semibold">{currentExercise?.exercise_name}</p>
+                    {workout?.sequential_sets ? (
+                      <div className="flex flex-row space-x-6">
+                        <p className="text-xl text-gray-100">Set {currentExercise?.sets}</p>
+                        <p className="text-xl text-gray-100">
+                          {currentExercise?.reps !== 0
+                            ? `${currentExercise?.reps} reps`
+                            : `${currentExercise.duration}s`}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-xl text-gray-100">
+                        {currentExercise?.reps !== 0
+                          ? `${currentExercise?.reps} reps`
+                          : `${currentExercise.duration}s`}
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <p className="text-3xl font-semibold">{nextExercise?.exercise_name}</p>
+                    {workout?.sequential_sets ? (
+                      <div className="flex flex-row space-x-6">
+                        <p className="text-xl text-gray-100">Set {nextExercise?.sets}</p>
+                        <p className="text-xl text-gray-100">
+                          {currentExercise?.reps !== 0
+                            ? `${currentExercise?.reps} reps`
+                            : `${currentExercise.duration}s`}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-xl text-gray-100">
+                        {nextExercise?.reps !== 0
+                          ? `${nextExercise?.reps} reps`
+                          : `${nextExercise.duration}s`}
+                      </p>
+                    )}
+                  </>
+                )}
               </div>
-            ) : (
-              <div className="flex items-center p-3">
-                <div className="ml-4">
-                  {isResting ? (
-                    <>
-                      <p className="text-3xl font-semibold">{currentExercise?.exercise_name}</p>
-                      <p className="text-xl text-gray-100">Last set</p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-3xl font-semibold">{nextExercise?.exercise_name}</p>
-                      <p className="text-xl text-gray-100">{nextExercise?.sets} sets</p>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
+            </div>
 
             <div className="flex flex-row justify-between mt-4">
               {(currentExercise.reps === 0 || isResting) && (
@@ -302,38 +307,3 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     </div>
   );
 };
-// useEffect(() => {
-//   // when sequentialSets do nothing
-
-//   if (workout.sequentialSets === false) {
-//     // destructure the array based on sets
-//     // so if pullups 3, pushups 2, squats 3, plank 1
-//     // then array should be [pullups,pushups,squats,plank, pullups pushups,squats, pulluups,squats, pullups, squats]
-
-//     // for (const exercise of workout.exercises) {
-//     // }
-//     // count exercise sets
-//     // const maxSets = Math.max(...workout.exercises.map(e => e.sets));
-
-//     let totalSets = 0;
-//     for (const exercise of workout.exercises) {
-//       totalSets += exercise.sets;
-//     }
-//     totalSets = 9;
-
-//     console.log("totalsets", totalSets);
-
-//     for (let i = 0; i < totalSets; i++) {
-//       workout.exercises.forEach(exercise => {
-//         let currentExerciseIndex = 0;
-//         if (workout.exercises[currentExerciseIndex].sets > 0) {
-//           workout.exercises[currentExerciseIndex].sets--;
-//           setExerciseState(prev => [...prev, { ...exercise, sets: 1, order: prev.length + 1 }]);
-//         } else {
-//           currentExerciseIndex++;
-//         }
-//         currentExerciseIndex++;
-//       });
-//     }
-//   }
-// }, []);

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Form, Formik } from "formik";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { HiArrowLeft } from "react-icons/hi";
 import { v4 as genUuid } from "uuid";
 
@@ -8,7 +9,7 @@ import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "../../a
 import { useCreateWorkout, useCreateExercise, useSession } from "../../hooks";
 import { cn } from "../../lib";
 import { RealButton } from "../button";
-import { ExerciseCard } from "../cards";
+import { FormikExerciseCard } from "../cards";
 
 import { FormikInput } from "./FormikInput";
 import { FormikToggle } from "./FormikToggle";
@@ -54,12 +55,23 @@ export const WorkoutCreator = () => {
 
         const workoutId = genUuid();
 
+        if (!sequentialSets) {
+          const firstExerciseSets = exercises[0].sets;
+
+          for (const exercise of exercises) {
+            if (exercise.sets !== firstExerciseSets) {
+              toast.error("All exercises must have the same number of sets, when not sequential.");
+              return;
+            }
+          }
+        }
+
         await createWorkout({
           id: workoutId,
           workout_name: name,
           average_completion_time:
             typeof averageCompletionTime === "string" ? 0 : averageCompletionTime,
-          sequential_sets: sequentialSets || true,
+          sequential_sets: sequentialSets,
           complete_duration_exercise_on_end: completeDurationExerciseOnEnd || false,
           image,
           profile_id: user?.user.id as string,
@@ -84,110 +96,110 @@ export const WorkoutCreator = () => {
         setSubmitting(false);
       }}
     >
-      {({ isValid, handleSubmit, values, setFieldValue }) => (
-        <Form className={cn("max-w-md mx-auto min-h-screen p-2 flex flex-col")}>
-          <div className="flex flex-row items-center justify-between my-5">
-            <Link to="/">
-              <HiArrowLeft className="icon" />
-            </Link>
-            <p className="text-3xl font-semibold text-center">Create Workout</p>
-            <HiArrowLeft className="opacity-0 icon" />
-          </div>
-          <div className="mb-5">
-            <div className="flex space-x-1">
-              <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
-              <FormikInput
-                name="averageCompletionTime"
-                type="number"
-                placeholder="60"
-                label="Average completion (min)"
+      {({ isValid, handleSubmit, values, setFieldValue }) => {
+        return (
+          <Form className={cn("max-w-md mx-auto min-h-screen p-2 flex flex-col")}>
+            <div className="flex flex-row items-center justify-between my-5">
+              <Link to="/">
+                <HiArrowLeft className="icon" />
+              </Link>
+              <p className="text-3xl font-semibold text-center">Create Workout</p>
+              <HiArrowLeft className="opacity-0 icon" />
+            </div>
+            <div className="mb-5">
+              <div className="flex space-x-1">
+                <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
+              </div>
+              <FormikToggle name="sequentialSets" label="Finish one exercise's sets first" />
+              <FormikToggle
+                name="completeDurationExerciseOnEnd"
+                label="Start rest immediately after exercise duration ends"
               />
             </div>
-            {/* <FormikToggle name="sequentialSets" disabled label="Finish one exercise's sets first" /> */}
-            <FormikToggle
-              name="completeDurationExerciseOnEnd"
-              label="Start rest immediately after exercise duration ends"
-            />
-          </div>
-          <div className="space-y-2">
-            {values.exercises?.map(exercise => {
-              return (
-                <ExerciseCard
-                  key={exercise.exercise}
-                  duration={exercise.duration}
-                  sets={exercise.sets}
-                  reps={exercise.reps}
-                  rest={exercise.rest}
-                  name={exercise.exercise}
-                />
-              );
-            })}
-          </div>
-          <div className="flex flex-col space-y-2">
-            <Formik
-              initialValues={initialValuesExercise}
-              validationSchema={YupSchemas.CreateExercise}
-              validateOnChange={true}
-              onSubmit={(
-                exerciseValues,
-                { setSubmitting: _setSubmitting, resetForm: _resetForm },
-              ) => {
-                _setSubmitting(true);
+            <div className="space-y-2">
+              {values.exercises?.map(exercise => {
+                return (
+                  <FormikExerciseCard
+                    key={exercise.exercise}
+                    duration={exercise.duration}
+                    sets={exercise.sets}
+                    reps={exercise.reps}
+                    rest={exercise.rest}
+                    name={exercise.exercise}
+                  />
+                );
+              })}
+            </div>
+            <div className="flex flex-col space-y-2">
+              <Formik
+                initialValues={initialValuesExercise}
+                validationSchema={YupSchemas.CreateExercise}
+                validateOnChange={true}
+                onSubmit={(
+                  exerciseValues,
+                  { setSubmitting: _setSubmitting, resetForm: _resetForm },
+                ) => {
+                  _setSubmitting(true);
 
-                const exerciseValuesWithOrder = {
-                  ...exerciseValues,
-                  order: values.exercises.length + 1,
-                };
+                  const exerciseValuesWithOrder = {
+                    ...exerciseValues,
+                    order: values.exercises.length + 1,
+                  };
 
-                setFieldValue("exercises", [...values.exercises, exerciseValuesWithOrder]);
-                _resetForm();
+                  setFieldValue("exercises", [...values.exercises, exerciseValuesWithOrder]);
+                  _resetForm();
 
-                _setSubmitting(false);
-              }}
-            >
-              {({ handleSubmit: handleExerciseSubmit, isValid: _isValid }) => (
-                <Form>
-                  <FormikInput name="exercise" placeholder="Scapula shrugs" label="Exercise name" />
-                  <div className="flex mt-1 mb-2 space-x-1">
-                    <FormikInput type="number" name="sets" placeholder="3" label="Sets" />
-                    <FormikInput type="number" name="rest" placeholder="180" label="Rest (sec)" />
-                  </div>
-
-                  <div className="flex items-center mt-1 mb-2 space-x-2">
-                    <FormikInput type="number" name="reps" placeholder="10" label="Reps" />
-                    <span className="mt-5">or</span>
+                  _setSubmitting(false);
+                }}
+              >
+                {({ handleSubmit: handleExerciseSubmit, isValid: _isValid }) => (
+                  <Form>
                     <FormikInput
-                      type="number"
-                      name="duration"
-                      placeholder="60"
-                      label="Duration (sec)"
+                      name="exercise"
+                      placeholder="Scapula shrugs"
+                      label="Exercise name"
                     />
-                  </div>
-                  <div className="flex justify-center my-4">
-                    <RealButton
-                      variant="blue"
-                      onClick={handleExerciseSubmit as any}
-                      isValid={_isValid}
-                    >
-                      Add exercise
-                    </RealButton>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
-          <div className="flex justify-center mt-auto mb-3">
-            <RealButton
-              variant="blue2"
-              type="submit"
-              onClick={handleSubmit as any}
-              isValid={isValid}
-            >
-              Create workout
-            </RealButton>
-          </div>
-        </Form>
-      )}
+                    <div className="flex mt-1 mb-2 space-x-1">
+                      <FormikInput type="number" name="sets" placeholder="3" label="Sets" />
+                      <FormikInput type="number" name="rest" placeholder="180" label="Rest (sec)" />
+                    </div>
+
+                    <div className="flex items-center mt-1 mb-2 space-x-2">
+                      <FormikInput type="number" name="reps" placeholder="10" label="Reps" />
+                      <span className="mt-5">or</span>
+                      <FormikInput
+                        type="number"
+                        name="duration"
+                        placeholder="60"
+                        label="Duration (sec)"
+                      />
+                    </div>
+                    <div className="flex justify-center my-4">
+                      <RealButton
+                        variant="blue"
+                        onClick={handleExerciseSubmit as any}
+                        isValid={_isValid}
+                      >
+                        Add exercise
+                      </RealButton>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+            </div>
+            <div className="flex justify-center mt-auto mb-3">
+              <RealButton
+                variant="blue2"
+                type="submit"
+                onClick={handleSubmit as any}
+                isValid={isValid}
+              >
+                Create workout
+              </RealButton>
+            </div>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };
