@@ -34,6 +34,10 @@ export const WorkoutCreator = () => {
     rest: "" as unknown as number,
     order: "" as unknown as number,
     duration: "" as unknown as number,
+    clearSets: false,
+    clearRest: false,
+    clearReps: false,
+    clearDuration: false,
   });
 
   return (
@@ -86,7 +90,7 @@ export const WorkoutCreator = () => {
             order,
             reps: typeof reps === "string" ? 0 : reps,
             sets,
-            rest,
+            rest: typeof rest === "string" ? 0 : rest,
             duration: typeof duration === "string" ? 0 : duration,
             workout_id: workoutId,
           });
@@ -107,9 +111,7 @@ export const WorkoutCreator = () => {
               <HiArrowLeft className="opacity-0 icon" />
             </div>
             <div className="mb-5">
-              <div className="flex space-x-1">
-                <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
-              </div>
+              <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
               <FormikToggle name="sequentialSets" label="Finish one exercise's sets first" />
               <FormikToggle
                 name="completeDurationExerciseOnEnd"
@@ -137,7 +139,7 @@ export const WorkoutCreator = () => {
                 validateOnChange={true}
                 onSubmit={(
                   exerciseValues,
-                  { setSubmitting: _setSubmitting, resetForm: _resetForm },
+                  { setSubmitting: _setSubmitting, setFieldValue: _setFieldValue },
                 ) => {
                   _setSubmitting(true);
 
@@ -147,7 +149,21 @@ export const WorkoutCreator = () => {
                   };
 
                   setFieldValue("exercises", [...values.exercises, exerciseValuesWithOrder]);
-                  _resetForm();
+
+                  _setFieldValue("exercise", "");
+
+                  if (exerciseValues.clearSets) {
+                    _setFieldValue("sets", "");
+                  }
+                  if (exerciseValues.clearRest) {
+                    _setFieldValue("rest", "");
+                  }
+                  if (exerciseValues.clearReps) {
+                    _setFieldValue("reps", "");
+                  }
+                  if (exerciseValues.clearDuration) {
+                    _setFieldValue("duration", "");
+                  }
 
                   _setSubmitting(false);
                 }}
@@ -159,20 +175,51 @@ export const WorkoutCreator = () => {
                       placeholder="Scapula shrugs"
                       label="Exercise name"
                     />
-                    <div className="flex mt-1 mb-2 space-x-1">
-                      <FormikInput type="number" name="sets" placeholder="3" label="Sets" />
-                      <FormikInput type="number" name="rest" placeholder="180" label="Rest (sec)" />
+                    <div className="flex flex-row justify-between mt-1 mb-2">
+                      <div className="flex flex-row items-center justify-center space-x-2">
+                        <FormikInput
+                          className="w-20"
+                          type="number"
+                          name="sets"
+                          placeholder="3"
+                          label="Sets"
+                        />
+                        <FormikToggle name="clearSets" label="Clear sets" />
+                      </div>
+                      <div className="flex flex-row items-center justify-center space-x-2">
+                        <FormikInput
+                          className="w-20"
+                          type="number"
+                          name="rest"
+                          placeholder="180"
+                          label="Rest (sec)"
+                        />
+                        <FormikToggle name="clearRest" label="Clear rest" />
+                      </div>
                     </div>
 
-                    <div className="flex items-center mt-1 mb-2 space-x-2">
-                      <FormikInput type="number" name="reps" placeholder="10" label="Reps" />
-                      <span className="mt-5">or</span>
-                      <FormikInput
-                        type="number"
-                        name="duration"
-                        placeholder="60"
-                        label="Duration (sec)"
-                      />
+                    <div className="flex flex-row justify-between mt-1 mb-2">
+                      <div className="flex flex-row items-center justify-center space-x-2">
+                        <FormikInput
+                          className="w-20"
+                          type="number"
+                          name="reps"
+                          placeholder="10"
+                          label="Reps"
+                        />
+                        <FormikToggle name="clearReps" label="Clear reps" />
+                      </div>
+                      <span className="mt-8">or</span>
+                      <div className="flex flex-row items-center justify-center space-x-2">
+                        <FormikInput
+                          className="w-20"
+                          type="number"
+                          name="duration"
+                          placeholder="60"
+                          label="Duration (sec)"
+                        />
+                        <FormikToggle name="clearDuration" label="Clear dur" />
+                      </div>
                     </div>
                     <div className="flex justify-center my-4">
                       <RealButton

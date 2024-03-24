@@ -4,11 +4,15 @@ const CreateExercise = yup
   .object()
   .shape({
     exercise: yup.string().required("Exercise name is required").default(""),
-    sets: yup.number().min(1).default(0),
+    sets: yup.number().min(1).typeError("Sets are required").required("Sets are required"),
     reps: yup.number().min(0).default(0).optional(),
     duration: yup.number().min(0).default(0).optional(),
     rest: yup.number().min(0).default(0),
     order: yup.number().min(0).default(0),
+    clearSets: yup.boolean().default(false),
+    clearRest: yup.boolean().default(false),
+    clearReps: yup.boolean().default(false),
+    clearDuration: yup.boolean().default(false),
   })
   .test("reps-duration", "Either reps or duration can be set", function (value) {
     const { reps, duration } = value;

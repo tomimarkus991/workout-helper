@@ -63,7 +63,7 @@ interface FormikToggleProps {
 export const FormikToggle = ({ tooltip, name, disabled, label }: FormikToggleProps) => {
   const [field, { value: pressed }, { setValue: setPressed }] = useField<boolean>(name);
   return (
-    <>
+    <div>
       {label && (
         <div className="ml-1">
           <label className="text-xs sm:text-sm text-stone-400" htmlFor={name}>
@@ -80,6 +80,6 @@ export const FormikToggle = ({ tooltip, name, disabled, label }: FormikTogglePro
       >
         <ToggleWrapper pressed={pressed} tooltip={tooltip} />
       </Switch>
-    </>
+    </div>
   );
 };
