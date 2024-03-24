@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
-import { add, format, setHours } from "date-fns";
 import { useEffect, useState } from "react";
 import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
 
 import { useGetWorkout, useCreateWorkoutStatistic } from "../../../hooks";
 import { initSounds, playSound, setVolume, stopSound } from "../../../services/sound";
+import { formatTime } from "../../../utils/formatTime";
 import { RealButton } from "../../button";
 
 interface Props {
@@ -25,16 +25,6 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { mutate: createWorkoutStatistic } = useCreateWorkoutStatistic();
 
   const navigate = useNavigate();
-
-  const formatTime = (totalSeconds: number, desiredFormat = "mm:ss") => {
-    if (totalSeconds <= 0) {
-      return "00:00";
-    }
-    const baseDate = setHours(new Date(), 0).setMinutes(0, 0, 0);
-    const date = add(baseDate, { seconds: totalSeconds });
-
-    return format(date, desiredFormat);
-  };
 
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [currentSet, setCurrentSet] = useState(1);
