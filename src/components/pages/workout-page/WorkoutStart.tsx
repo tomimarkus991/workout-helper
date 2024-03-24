@@ -252,7 +252,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 }}
               /> */}
                 <div className="ml-4">
-                  <p className="text-3xl font-semibold">{currentExercise.exercise_name}</p>
+                  <p className="text-2xl font-semibold">{currentExercise.exercise_name}</p>
                   <p className="text-xl text-gray-100">
                     {isResting
                       ? `Next up set ${currentSet}`
@@ -288,7 +288,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
             <div className="flex flex-row justify-between mt-4">
               <RealButton
-                className="w-12 px-8"
+                className="w-0"
                 size="lg"
                 variant="blue"
                 onClick={() => {
@@ -302,7 +302,8 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 -10
               </RealButton>
               <RealButton
-                className="px-8 mx-auto text-lg"
+                className="mx-auto"
+                size="lg"
                 variant="blue"
                 onClick={() => {
                   if (isResting) {
@@ -315,7 +316,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 {isResting ? "Skip rest" : "Complete"}
               </RealButton>
               <RealButton
-                className="w-12 px-8"
+                className="w-0"
                 size="lg"
                 variant="blue"
                 onClick={() => {
