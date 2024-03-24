@@ -176,18 +176,6 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
       <div className="flex flex-col flex-grow md:flex-grow-0 md:flex-row md:justify-evenly">
         <div className="p-4">
           <div className="relative mt-32 text-center md:mt-14">
-            {/* {!isResting && (
-            <img
-              alt="Exercise"
-              className="w-full h-[200px] relative"
-              src="/general/placeholder.svg"
-              style={{
-                aspectRatio: "355/200",
-                objectFit: "cover",
-              }}
-            />
-          )} */}
-
             {isResting && (
               <p className="mt-32 text-5xl font-bold font-number">{formatTime(restCountdown)}</p>
             )}
@@ -243,14 +231,6 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
             <p className="text-xl tracking-wide uppercase ml-7 text-slate-100">next up</p>
             {currentSet < currentExercise.sets ? (
               <div className="flex items-center p-3">
-                {/* <img
-                alt="Exercise"
-                className="size-14"
-                src="/general/placeholder.svg"
-                style={{
-                  objectFit: "cover",
-                }}
-              /> */}
                 <div className="ml-4">
                   <p className="text-2xl font-semibold">{currentExercise.exercise_name}</p>
                   <p className="text-xl text-gray-100">
@@ -262,14 +242,6 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               </div>
             ) : (
               <div className="flex items-center p-3">
-                {/* <img
-                alt="Exercise"
-                className="size-14"
-                src="/general/placeholder.svg"
-                style={{
-                  objectFit: "cover",
-                }}
-              /> */}
                 <div className="ml-4">
                   {isResting ? (
                     <>
