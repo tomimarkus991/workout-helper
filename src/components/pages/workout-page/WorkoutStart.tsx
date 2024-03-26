@@ -109,6 +109,11 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     }
 
     if (isWorkoutFinished) {
+      createWorkoutStatistic({
+        workout_id: workout?.id || "",
+        completion_time: totalWorkoutTime,
+      });
+
       stopSound("ending");
     }
 
@@ -194,11 +199,6 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 variant="blue"
                 onClick={() => {
                   setIsWorkoutFinished(true);
-
-                  createWorkoutStatistic({
-                    workout_id: workout?.id || "",
-                    completion_time: totalWorkoutTime,
-                  });
 
                   if (isAudioEnabled) stopSound("complete");
                 }}
