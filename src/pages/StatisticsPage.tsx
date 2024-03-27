@@ -1,4 +1,13 @@
-import { endOfWeek, format, getDate, getWeek, secondsToMinutes, startOfWeek } from "date-fns";
+import {
+  endOfWeek,
+  format,
+  getDate,
+  getHours,
+  getMinutes,
+  getWeek,
+  intervalToDuration,
+  startOfWeek,
+} from "date-fns";
 
 import { NavbarBottom } from "../components";
 import { useGetAllWorkoutsStats } from "../hooks/query/useGetAllWorkoutStats";
@@ -53,18 +62,27 @@ export const StatisticsPage = () => {
         <table className="w-full mt-5">
           <thead>
             <tr>
-              <th className="text-left">Date</th>
-              <th className="text-left">Workout</th>
-              <th className="text-left">Time (min)</th>
+              <th className="p-1 text-left">Date</th>
+              <th className="p-1 text-left">Workout</th>
+              <th className="p-1 text-left">Time (min)</th>
             </tr>
           </thead>
           <tbody>
             {workoutStats?.map(workout => {
+              const { minutes, seconds } = intervalToDuration({
+                start: 0,
+                end: (workout?.completion_time || 0) * 1000,
+              });
               return (
                 <tr key={workout.id}>
-                  <td>{getDate(workout.created_at)}</td>
-                  <td>{workout.workout?.workout_name}</td>
-                  <td>{secondsToMinutes(workout?.completion_time || 0)}</td>
+                  <td className="p-1">
+                    {getDate(workout.created_at)} {getHours(workout.created_at)}:
+                    {String(getMinutes(workout.created_at)).padStart(2, "0")}
+                  </td>
+                  <td className="p-1">{workout.workout?.workout_name}</td>
+                  <td className="p-1">
+                    {minutes}:{String(seconds).padStart(2, "0")}
+                  </td>
                 </tr>
               );
             })}

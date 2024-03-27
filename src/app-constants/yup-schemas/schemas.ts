@@ -3,6 +3,7 @@ import * as yup from "yup";
 const CreateExercise = yup
   .object()
   .shape({
+    exerciseId: yup.string().default(""),
     exercise: yup.string().required("Exercise name is required").default(""),
     sets: yup.number().min(1).typeError("Sets are required").required("Sets are required"),
     reps: yup.number().min(0).default(0).optional(),

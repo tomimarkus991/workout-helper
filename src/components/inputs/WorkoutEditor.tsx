@@ -43,6 +43,7 @@ export const WorkoutEditor = () => {
     completeDurationExerciseOnEnd: workout.complete_duration_exercise_on_end,
     sequentialSets: workout.sequential_sets,
     exercises: workout.exercise.map(exercise => ({
+      exerciseId: exercise.id,
       exercise: exercise.exercise_name,
       sets: exercise.sets,
       reps: exercise.reps,
@@ -54,6 +55,7 @@ export const WorkoutEditor = () => {
       clearReps: false,
       clearDuration: false,
     })),
+    exerciseId: "",
     exercise: "",
     sets: "" as unknown as number,
     reps: "" as unknown as number,

@@ -26,8 +26,8 @@ export const useGetAllWorkoutsStats = () => {
       `,
       )
       .eq("workout.profile_id", user?.session?.user.id as string)
-      .gte("created_at", startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString())
-      .lte("created_at", endOfWeek(new Date(), { weekStartsOn: 1 }).toISOString());
+      .lte("created_at", endOfWeek(new Date(), { weekStartsOn: 1 }).toISOString())
+      .gte("created_at", startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString());
 
     if (error) {
       toast.error(`Error getting workout stats: ${error.message}`);

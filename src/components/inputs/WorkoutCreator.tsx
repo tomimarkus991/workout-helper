@@ -21,8 +21,10 @@ export const WorkoutCreator = () => {
   const { data: user } = useSession();
 
   const [isCreatingWorkout, setIsCreatingWorkout] = useState(false);
+  const [isEditingExercise, setIsEditingExercise] = useState(false);
 
   const [initialValues] = useState<CreateWorkoutFormValues & ExerciseFormValues>({
+    exerciseId: "",
     name: "",
     completeDurationExerciseOnEnd: false,
     sequentialSets: true,
@@ -170,6 +172,7 @@ export const WorkoutCreator = () => {
                       rest={exercise.rest}
                       name={exercise.exercise}
                       order={exercise.order}
+                      setIsEditingExercise={setIsEditingExercise}
                     />
                   );
                 })}
@@ -232,7 +235,7 @@ export const WorkoutCreator = () => {
                   }}
                   isValid={isValid}
                 >
-                  Add exercise
+                  {isEditingExercise ? "Update Exercise" : "Add Exercise"}
                 </RealButton>
               </div>
             </div>
@@ -248,7 +251,7 @@ export const WorkoutCreator = () => {
                 }}
                 isValid={isValid}
               >
-                Create workout
+                Create Workout
               </RealButton>
             </div>
           </Form>

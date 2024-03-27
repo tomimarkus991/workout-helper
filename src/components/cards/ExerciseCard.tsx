@@ -12,6 +12,7 @@ interface Props {
   name: string;
   order: number | string;
   setIsEditingExercise?: (isEditingExercise: boolean) => void;
+  id?: string;
 }
 
 export const ExerciseCard = ({ duration, reps, rest, sets, name }: Props) => {
@@ -43,6 +44,7 @@ export const FormikExerciseCard = ({
   duration,
   order,
   setIsEditingExercise,
+  id,
 }: Props) => {
   // @ts-ignore
   const [field, _, { setValue }] = useField("exercises");
@@ -52,6 +54,7 @@ export const FormikExerciseCard = ({
   const [______, _______, { setValue: setRepsValue }] = useField("reps");
   const [________, _________, { setValue: setRestValue }] = useField("rest");
   const [__________, ___________, { setValue: setDurationValue }] = useField("duration");
+  const [____________, _____________, { setValue: setExerciseId }] = useField("exerciseId");
 
   const handleCardClick = () => {
     setExerciseValue(name);
@@ -59,6 +62,7 @@ export const FormikExerciseCard = ({
     setRepsValue(reps);
     setRestValue(rest);
     setDurationValue(duration);
+    setExerciseId(id);
 
     setIsEditingExercise && setIsEditingExercise(true);
   };
