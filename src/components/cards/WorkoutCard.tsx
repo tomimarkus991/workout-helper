@@ -2,8 +2,8 @@ import { Link } from "@tanstack/react-router";
 
 import { Workout } from "../../app-constants";
 
-type Props = Pick<Workout, "id" | "averageCompletionTime" | "name" | "image">;
-// to={`${definedRoutes.workoutPage}/${id}`}
+type Props = Pick<Workout, "id" | "name" | "image"> & { averageCompletionTime: number };
+
 export const WorkoutCard = ({ id, averageCompletionTime, name, image }: Props) => (
   <Link
     to="/workout/$id"

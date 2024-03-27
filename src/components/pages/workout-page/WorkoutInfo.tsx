@@ -1,10 +1,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
-import { Link, useParams } from "@tanstack/react-router";
-import { BsThreeDots } from "react-icons/bs";
-import { HiArrowLeft } from "react-icons/hi";
 
-import { useGetWorkout, useDeleteWorkout } from "../../../hooks";
+import { Link, useParams } from "@tanstack/react-router";
+import { HiArrowLeft, HiPencil } from "react-icons/hi";
+
+import { useGetWorkout } from "../../../hooks";
 import { AnimationWrapper, animations } from "../../animations";
 import { RealButton } from "../../button";
 import { ExerciseCard } from "../../cards";
@@ -18,7 +17,7 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { id } = useParams({ strict: false });
 
   const { data: workout } = useGetWorkout(id);
-  const { mutate: deleteWorkout } = useDeleteWorkout();
+
   return (
     <div className="flex flex-col max-w-md min-h-screen p-4 m-auto">
       <div className="flex flex-row items-center ml-3 mr-6">
@@ -28,18 +27,16 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         <p className="text-3xl font-semibold text-center">{workout?.workout_name}</p>
 
         <div className="ml-auto">
-          <Popover>
-            <PopoverTrigger>
-              <AnimationWrapper variants={animations.smallScale}>
-                <BsThreeDots className="cursor-pointer size-7 fill-white hover:fill-gray-200" />
-              </AnimationWrapper>
-            </PopoverTrigger>
-            <PopoverContent>
-              <div className="flex flex-col items-center space-y-1">
-                <p onClick={() => deleteWorkout({ id })}>delete</p>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <AnimationWrapper variants={animations.smallScale}>
+            <Link
+              to="/update-workout/$id"
+              params={{
+                id,
+              }}
+            >
+              <HiPencil className="cursor-pointer size-7 fill-white hover:fill-gray-200" />
+            </Link>
+          </AnimationWrapper>
         </div>
       </div>
       <div>
@@ -54,6 +51,7 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 reps={exercise.reps}
                 rest={exercise.rest}
                 name={exercise.exercise_name}
+                order={exercise.order}
               />
             );
           })}

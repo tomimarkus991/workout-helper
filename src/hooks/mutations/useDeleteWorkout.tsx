@@ -49,7 +49,7 @@ export const useDeleteWorkout = () => {
   return useMutation({
     mutationFn: (user: Props) => execute(user),
     onSuccess: () => {
-      toast.success("Exercise deleted successfully!");
+      toast.success("Workout deleted successfully!");
       queryClient.invalidateQueries({
         queryKey: ["get_workouts"],
       });

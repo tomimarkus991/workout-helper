@@ -86,8 +86,13 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
           }
 
           if (countdown === 1 && isAudioEnabled) playSound("complete");
-          if (workout?.complete_duration_exercise_on_end) {
+
+          if (workout?.complete_duration_exercise_on_end && nextExercise) {
             handleCompleteExercise();
+          }
+
+          if (!nextExercise) {
+            setIsWorkoutFinished(true);
           }
           return 0;
         });
@@ -189,7 +194,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
           )}
         </div>
 
-        {!nextExercise && !isResting ? (
+        {!nextExercise && !isResting && exerciseCountdown === 0 ? (
           <>
             <div className="p-4 mt-auto bg-slate-800">
               <p className="text-2xl font-semibold text-center">Last set</p>
@@ -203,7 +208,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                   if (isAudioEnabled) stopSound("complete");
                 }}
               >
-                Complete workout
+                Finish workout
               </RealButton>
             </div>
           </>
@@ -236,22 +241,28 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                   </>
                 ) : (
                   <>
-                    <p className="mb-3 text-2xl font-semibold">{nextExercise?.exercise_name}</p>
-                    {workout?.sequential_sets ? (
-                      <div className="flex flex-row space-x-6">
-                        <p className="text-xl text-gray-100">Set {nextExercise?.sets}</p>
-                        <p className="text-xl text-gray-100">
-                          {nextExercise?.reps !== 0
-                            ? `${nextExercise?.reps === 999 ? "Max" : nextExercise?.reps} reps`
-                            : `${nextExercise?.duration}s`}
-                        </p>
-                      </div>
+                    {nextExercise ? (
+                      <>
+                        <p className="text-2xl font-semibold">{nextExercise?.exercise_name}</p>
+                        {workout?.sequential_sets ? (
+                          <div className="flex flex-row space-x-6">
+                            <p className="text-xl text-gray-100">Set {nextExercise?.sets}</p>
+                            <p className="text-xl text-gray-100">
+                              {nextExercise?.reps !== 0
+                                ? `${nextExercise?.reps === 999 ? "Max" : nextExercise?.reps} reps`
+                                : `${nextExercise?.duration}s`}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-xl text-gray-100">
+                            {nextExercise?.reps !== 0
+                              ? `${nextExercise?.reps === 999 ? "Max" : nextExercise?.reps} reps`
+                              : `${nextExercise.duration}s`}
+                          </p>
+                        )}
+                      </>
                     ) : (
-                      <p className="text-xl text-gray-100">
-                        {nextExercise?.reps !== 0
-                          ? `${nextExercise?.reps === 999 ? "Max" : nextExercise?.reps} reps`
-                          : `${nextExercise.duration}s`}
-                      </p>
+                      <p className="text-xl text-gray-100">Finish workout</p>
                     )}
                   </>
                 )}

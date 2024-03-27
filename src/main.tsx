@@ -25,6 +25,7 @@ import {
   WorkoutPage,
   CreateWorkoutPage,
 } from "./pages";
+import { UpdateWorkoutPage } from "./pages/UpdateWorkoutPage";
 import { supabase } from "./utils";
 
 setDefaultOptions({ locale: et });
@@ -105,6 +106,11 @@ const createWorkoutRoute = new Route({
   path: "/create-workout",
   component: CreateWorkoutPage,
 });
+const updateWorkoutRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/update-workout/$id",
+  component: UpdateWorkoutPage,
+});
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -114,6 +120,7 @@ const routeTree = rootRoute.addChildren([
   profileRoute,
   notesRoute,
   createWorkoutRoute,
+  updateWorkoutRoute,
 ]);
 
 const router = new Router({

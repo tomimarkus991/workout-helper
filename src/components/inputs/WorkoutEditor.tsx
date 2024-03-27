@@ -1,12 +1,14 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { Form, Formik } from "formik";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { HiArrowLeft } from "react-icons/hi";
+import { HiArrowLeft, HiTrash } from "react-icons/hi";
 import { v4 as genUuid } from "uuid";
 
 import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "../../app-constants";
-import { useCreateWorkout, useCreateExercise, useSession } from "../../hooks";
+import { useCreateExercise, useDeleteWorkout, useGetWorkout } from "../../hooks";
+import { useUpdateExercise } from "../../hooks/mutations/useUpdateExercise";
+import { useUpdateWorkout } from "../../hooks/mutations/useUpdateWorkout";
 import { cn } from "../../lib";
 import { RealButton } from "../button";
 import { FormikExerciseCard } from "../cards";
@@ -14,19 +16,44 @@ import { FormikExerciseCard } from "../cards";
 import { FormikInput } from "./FormikInput";
 import { FormikToggle } from "./FormikToggle";
 
-export const WorkoutCreator = () => {
-  const { mutateAsync: createWorkout } = useCreateWorkout();
+// todo:
+// add reordering of exercises
+// add updating exercise sets reps etc. when user clicks it it will fill the form and have update button
+
+export const WorkoutEditor = () => {
+  const { id } = useParams({ strict: false });
+
+  const { data: workout } = useGetWorkout(id);
+
+  if (!workout) {
+    return <p>Workout not found</p>;
+  }
+
+  const { mutate: deleteWorkout } = useDeleteWorkout();
+
+  const { mutateAsync: updateWorkout } = useUpdateWorkout();
   const { mutateAsync: createExercise } = useCreateExercise();
+  const { mutateAsync: updateExercise } = useUpdateExercise();
 
-  const { data: user } = useSession();
-
-  const [isCreatingWorkout, setIsCreatingWorkout] = useState(false);
+  const [isEditingExercise, setIsEditingExercise] = useState(false);
+  const [isUpdatingWorkout, setIsUpdatingWorkout] = useState(false);
 
   const [initialValues] = useState<CreateWorkoutFormValues & ExerciseFormValues>({
-    name: "",
-    completeDurationExerciseOnEnd: false,
-    sequentialSets: true,
-    exercises: [],
+    name: workout.workout_name,
+    completeDurationExerciseOnEnd: workout.complete_duration_exercise_on_end,
+    sequentialSets: workout.sequential_sets,
+    exercises: workout.exercise.map(exercise => ({
+      exercise: exercise.exercise_name,
+      sets: exercise.sets,
+      reps: exercise.reps,
+      rest: exercise.rest,
+      duration: exercise.duration,
+      order: exercise.order,
+      clearSets: false,
+      clearRest: false,
+      clearReps: false,
+      clearDuration: false,
+    })),
     exercise: "",
     sets: "" as unknown as number,
     reps: "" as unknown as number,
@@ -42,22 +69,14 @@ export const WorkoutCreator = () => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={isCreatingWorkout ? YupSchemas.CreateWorkout : YupSchemas.CreateExercise}
+      validationSchema={isUpdatingWorkout ? YupSchemas.CreateWorkout : YupSchemas.CreateExercise}
       validateOnChange={false}
       validateOnBlur={false}
       onSubmit={async (values, { setSubmitting, resetForm, setFieldValue }) => {
         setSubmitting(true);
 
-        if (isCreatingWorkout) {
-          const {
-            sequentialSets,
-            completeDurationExerciseOnEnd,
-            image = `${Math.floor(Math.random() * 11 + 1)}w.jpg`,
-            exercises,
-            name,
-          } = values;
-
-          const workoutId = genUuid();
+        if (isUpdatingWorkout) {
+          const { sequentialSets, completeDurationExerciseOnEnd, exercises, name } = values;
 
           if (!sequentialSets) {
             const firstExerciseSets = exercises[0].sets;
@@ -72,32 +91,13 @@ export const WorkoutCreator = () => {
             }
           }
 
-          await createWorkout({
-            id: workoutId,
+          await updateWorkout({
+            id,
             workout_name: name,
             sequential_sets: sequentialSets,
-            complete_duration_exercise_on_end: completeDurationExerciseOnEnd || false,
-            image,
-            profile_id: user?.user.id as string,
+            complete_duration_exercise_on_end:
+              completeDurationExerciseOnEnd || workout?.complete_duration_exercise_on_end,
           });
-
-          for await (const [
-            index,
-            { reps, rest, sets, duration, exercise },
-          ] of exercises.entries()) {
-            const exerciseId = genUuid();
-
-            await createExercise({
-              id: exerciseId,
-              exercise_name: exercise,
-              order: index + 1,
-              reps: typeof reps === "string" ? 0 : reps,
-              sets,
-              rest: typeof rest === "string" ? 0 : rest,
-              duration: typeof duration === "string" ? 0 : duration,
-              workout_id: workoutId,
-            });
-          }
 
           resetForm();
         } else {
@@ -107,6 +107,7 @@ export const WorkoutCreator = () => {
             clearRest,
             clearSets,
             reps,
+            order,
             rest,
             duration,
             sets,
@@ -115,10 +116,16 @@ export const WorkoutCreator = () => {
 
           setFieldValue("order", values.exercises.length + 1);
 
-          setFieldValue("exercises", [
-            ...values.exercises,
-            { exercise, reps, duration, rest, sets },
-          ]);
+          const exerciseValuesWithOrder = {
+            exercise,
+            order: values.exercises.length + 1,
+            reps,
+            duration,
+            rest,
+            sets,
+          };
+
+          setFieldValue("exercises", [...values.exercises, exerciseValuesWithOrder]);
 
           setFieldValue("exercise", "");
 
@@ -134,6 +141,23 @@ export const WorkoutCreator = () => {
           if (clearDuration) {
             setFieldValue("duration", "");
           }
+
+          if (isEditingExercise) {
+            await updateExercise({});
+          } else {
+            const exerciseId = genUuid();
+
+            await createExercise({
+              id: exerciseId,
+              exercise_name: exercise,
+              order,
+              reps: typeof reps === "string" ? 0 : reps,
+              sets,
+              rest: typeof rest === "string" ? 0 : rest,
+              duration: typeof duration === "string" ? 0 : duration,
+              workout_id: id,
+            });
+          }
         }
 
         setSubmitting(false);
@@ -146,8 +170,8 @@ export const WorkoutCreator = () => {
               <Link to="/">
                 <HiArrowLeft className="icon" />
               </Link>
-              <p className="text-3xl font-semibold text-center">Create Workout</p>
-              <HiArrowLeft className="opacity-0 icon" />
+              <p className="text-3xl font-semibold text-center">Update Workout</p>
+              <HiTrash className="text-red-700 icon" onClick={() => deleteWorkout({ id })} />
             </div>
             <div className="mb-5">
               <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
@@ -170,6 +194,7 @@ export const WorkoutCreator = () => {
                       rest={exercise.rest}
                       name={exercise.exercise}
                       order={exercise.order}
+                      setIsEditingExercise={setIsEditingExercise}
                     />
                   );
                 })}
@@ -225,14 +250,14 @@ export const WorkoutCreator = () => {
                 <RealButton
                   variant="blue2"
                   onClick={() => {
-                    setIsCreatingWorkout(false);
+                    setIsUpdatingWorkout(false);
                     if (isValid) {
                       handleSubmit();
                     }
                   }}
                   isValid={isValid}
                 >
-                  Add exercise
+                  {isEditingExercise ? "Update exercise" : "Add exercise"}
                 </RealButton>
               </div>
             </div>
@@ -241,14 +266,14 @@ export const WorkoutCreator = () => {
                 variant="blue"
                 type="submit"
                 onClick={() => {
-                  setIsCreatingWorkout(true);
+                  setIsUpdatingWorkout(true);
                   if (isValid) {
                     handleSubmit();
                   }
                 }}
                 isValid={isValid}
               >
-                Create workout
+                Update workout
               </RealButton>
             </div>
           </Form>

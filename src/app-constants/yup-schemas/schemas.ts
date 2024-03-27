@@ -32,14 +32,16 @@ const CreateExercise = yup
     }
     return true;
   });
+
 const CreateWorkout = yup.object().shape({
   name: yup.string().nullable().required("Name is required"),
-  averageCompletionTime: yup.number().min(0).default(0),
   image: yup.string().nullable(),
   sequentialSets: yup.boolean(),
   exercises: yup.array().of(CreateExercise).default([]).required("Exercises are required"),
   completeDurationExerciseOnEnd: yup.boolean().nullable().default(false),
 });
+
+const FullWorkout = CreateExercise.concat(CreateWorkout);
 
 const Login = yup.object().shape({
   email: yup.string().email().required("Required"),
@@ -64,4 +66,4 @@ export type Workout = yup.InferType<typeof CreateWorkout> & { id: string; durati
 export type ExerciseFormValues = yup.InferType<typeof CreateExercise>;
 export type Exercise = yup.InferType<typeof CreateExercise> & { id: string };
 
-export const YupSchemas = { CreateWorkout, CreateExercise, Login, Register };
+export const YupSchemas = { CreateWorkout, CreateExercise, Login, Register, FullWorkout };
