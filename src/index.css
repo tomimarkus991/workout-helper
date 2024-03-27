@@ -37,7 +37,7 @@ input[type="number"] {
   body {
     @apply bg-slate-900;
   }
-  p {
+  p, td, th, tr {
     @apply text-[#f3f2f0] font-primary;
   }
   h1 {

@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { FiPlusCircle } from "react-icons/fi";
 
-import { RealButton, WorkoutCard } from "../components";
-import { useUser, useGetWorkouts } from "../hooks";
+import { NavbarBottom, RealButton, WorkoutCard } from "../components";
+import { useGetWorkouts, useUser } from "../hooks";
 
 type WorkoutStatistics = {
   completion_time: number | null;
@@ -74,7 +74,7 @@ export const WorkoutsPage = () => {
         </Link>
       </div>
 
-      {/* <NavbarBottom /> */}
+      <NavbarBottom />
     </div>
   );
 };

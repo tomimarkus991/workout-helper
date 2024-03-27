@@ -10,8 +10,6 @@ import {
   redirect,
   rootRouteWithContext,
 } from "@tanstack/react-router";
-import { setDefaultOptions } from "date-fns";
-import { et } from "date-fns/locale";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "react-hot-toast";
@@ -25,10 +23,9 @@ import {
   WorkoutPage,
   CreateWorkoutPage,
 } from "./pages";
+import { StatisticsPage } from "./pages/StatisticsPage";
 import { UpdateWorkoutPage } from "./pages/UpdateWorkoutPage";
 import { supabase } from "./utils";
-
-setDefaultOptions({ locale: et });
 
 const root = createRoot(document.getElementById("root") as HTMLElement);
 
@@ -111,6 +108,11 @@ const updateWorkoutRoute = new Route({
   path: "/update-workout/$id",
   component: UpdateWorkoutPage,
 });
+const statisticsRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/statistics",
+  component: StatisticsPage,
+});
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -121,6 +123,7 @@ const routeTree = rootRoute.addChildren([
   notesRoute,
   createWorkoutRoute,
   updateWorkoutRoute,
+  statisticsRoute,
 ]);
 
 const router = new Router({
