@@ -35,14 +35,15 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const [exerciseCountdown, setExerciseCountdown] = useState(0);
   const [totalWorkoutTime, setTotalWorkoutTime] = useState(0);
 
-  const currentExercise = workout?.modifiedExercises[currentExerciseIndex]!;
+  const previousExercise = workout?.modifiedExercises[currentExerciseIndex - 1];
+  const currentExercise = workout?.modifiedExercises[currentExerciseIndex];
   const nextExercise = workout?.modifiedExercises[currentExerciseIndex + 1];
 
   useEffect(() => {
     let interval: any;
 
     if (isResting) {
-      setRestCountdown(currentExercise.rest);
+      setRestCountdown(previousExercise?.rest || 0);
 
       interval = setInterval(() => {
         setRestCountdown(countdown => {
@@ -68,7 +69,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
       setCurrentExerciseIndex(nextIndex);
     }
     // when switching to next exercise, start rest countdown
-    setRestCountdown(currentExercise?.rest || 0);
+    setRestCountdown(nextExercise?.rest || 0);
     setIsResting(true);
   };
 
@@ -172,7 +173,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 <p className="mt-6 text-6xl font-bold font-number">{formatTime(restCountdown)}</p>
               </div>
             )}
-            {currentExercise.duration !== 0 && !isResting && (
+            {currentExercise?.duration !== 0 && !isResting && (
               <p className="z-10 mt-6 text-4xl font-bold font-number">
                 {formatTime(exerciseCountdown)}
               </p>
@@ -181,15 +182,15 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
           {!isResting && (
             <div className="mt-4 mb-2 text-center sm:text-center">
-              {currentExercise.reps !== 0 && (
+              {currentExercise?.reps !== 0 && (
                 <p className="text-3xl font-bold">
-                  {currentExercise.reps === 999 ? "Max" : currentExercise.reps} reps
+                  {currentExercise?.reps === 999 ? "Max" : currentExercise?.reps} reps
                 </p>
               )}
               <p className="max-w-xs mx-auto mt-4 text-3xl font-semibold sm:max-w-none sm:mx-auto">
-                {currentExercise.exercise_name}
+                {currentExercise?.exercise_name}
               </p>
-              <p className="mt-5 text-3xl font-semibold">Set {currentExercise.sets}</p>
+              <p className="mt-5 text-3xl font-semibold">Set {currentExercise?.sets}</p>
             </div>
           )}
         </div>
@@ -270,7 +271,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
             </div>
 
             <div className="flex flex-row justify-between mt-4">
-              {(currentExercise.reps === 0 || isResting) && (
+              {(currentExercise?.reps === 0 || isResting) && (
                 <RealButton
                   className="w-0"
                   size="lg"
@@ -300,7 +301,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               >
                 {isResting ? "Skip rest" : "Complete"}
               </RealButton>
-              {(currentExercise.reps === 0 || isResting) && (
+              {(currentExercise?.reps === 0 || isResting) && (
                 <RealButton
                   className="w-0"
                   size="lg"
