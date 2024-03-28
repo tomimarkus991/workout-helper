@@ -11,6 +11,8 @@ import {
   rootRouteWithContext,
 } from "@tanstack/react-router";
 import { StrictMode } from "react";
+import { DndProvider } from "react-dnd";
+import { TouchBackend } from "react-dnd-touch-backend";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "react-hot-toast";
 
@@ -146,8 +148,10 @@ declare module "@tanstack/react-router" {
 root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <RouterProvider router={router} />
+      <DndProvider backend={TouchBackend}>
+        <Toaster />
+        <RouterProvider router={router} />
+      </DndProvider>
     </QueryClientProvider>
   </StrictMode>,
 );

@@ -16,10 +16,6 @@ import { FormikExerciseCard } from "../cards";
 import { FormikInput } from "./FormikInput";
 import { FormikToggle } from "./FormikToggle";
 
-// todo:
-// add reordering of exercises
-// add updating exercise sets reps etc. when user clicks it it will fill the form and have update button
-
 export const WorkoutEditor = () => {
   const { id } = useParams({ strict: false });
 
@@ -37,6 +33,7 @@ export const WorkoutEditor = () => {
 
   const [isEditingExercise, setIsEditingExercise] = useState(false);
   const [isUpdatingWorkout, setIsUpdatingWorkout] = useState(false);
+  const [wasSomethingDeletedOrMoved, setWasSomethingDeletedOrMoved] = useState(false);
 
   const [initialValues] = useState<CreateWorkoutFormValues & ExerciseFormValues>({
     name: workout.workout_name,
@@ -101,11 +98,13 @@ export const WorkoutEditor = () => {
               completeDurationExerciseOnEnd || workout?.complete_duration_exercise_on_end,
           });
 
-          for await (const [index, exercise] of exercises.entries()) {
-            await updateExercise({
-              id: exercise.exerciseId,
-              order: index + 1,
-            });
+          if (wasSomethingDeletedOrMoved) {
+            for await (const [index, exercise] of exercises.entries()) {
+              await updateExercise({
+                id: exercise.exerciseId,
+                order: index + 1,
+              });
+            }
           }
         } else {
           const {
@@ -224,7 +223,7 @@ export const WorkoutEditor = () => {
 
             <div className="flex flex-col space-y-2">
               <div className="space-y-2">
-                {values.exercises?.map(exercise => {
+                {values.exercises?.map((exercise, index) => {
                   return (
                     <FormikExerciseCard
                       key={exercise.exerciseId}
@@ -236,6 +235,8 @@ export const WorkoutEditor = () => {
                       setIsEditingExercise={setIsEditingExercise}
                       workoutId={id}
                       exerciseId={exercise.exerciseId}
+                      index={index}
+                      setWasSomethingDeletedOrMoved={setWasSomethingDeletedOrMoved}
                     />
                   );
                 })}

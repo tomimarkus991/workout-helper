@@ -21,7 +21,8 @@ export const useGetWorkouts = () => {
       )
       `,
       )
-      .eq("profile_id", user?.session?.user.id as string);
+      .eq("profile_id", user?.session?.user.id as string)
+      .order("created_at", { ascending: true });
 
     if (error) {
       toast.error(`Error getting workouts: ${error.message}`);
