@@ -145,7 +145,16 @@ export const WorkoutEditor = () => {
           }
 
           if (isEditingExercise) {
-            await updateExercise({});
+            await updateExercise({
+              id: values.exerciseId,
+              exercise_name: exercise,
+              order,
+              reps: typeof reps === "string" ? 0 : reps,
+              sets,
+              rest: typeof rest === "string" ? 0 : rest,
+              duration: typeof duration === "string" ? 0 : duration,
+              workout_id: id,
+            });
           } else {
             const exerciseId = genUuid();
 

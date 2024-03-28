@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
+import { IonSpinner } from "@ionic/react";
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
@@ -22,7 +23,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
   const { data: workout, isLoading, error } = useGetWorkout(id);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
-  const { mutate: createWorkoutStatistic } = useCreateWorkoutStatistic();
+  const { mutateAsync: createWorkoutStatistic, isPending } = useCreateWorkoutStatistic();
 
   const navigate = useNavigate();
 
@@ -115,12 +116,12 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     }
 
     if (isWorkoutFinished) {
+      stopSound("ending");
+
       createWorkoutStatistic({
         workout_id: workout?.id || "",
         completion_time: totalWorkoutTime,
       });
-
-      stopSound("ending");
     }
 
     return () => clearInterval(interval);
@@ -134,7 +135,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     return <p>Loading...</p>;
   }
 
-  if (isWorkoutFinished) {
+  if (isWorkoutFinished && !isPending) {
     return (
       <div className="mt-40 text-center">
         <p className="text-2xl">Workout Complete</p>
@@ -209,7 +210,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                   if (isAudioEnabled) stopSound("complete");
                 }}
               >
-                Finish workout
+                {isPending ? <IonSpinner /> : "Finish workout"}
               </RealButton>
             </div>
           </>

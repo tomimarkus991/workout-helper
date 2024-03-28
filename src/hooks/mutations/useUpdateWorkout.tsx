@@ -6,7 +6,7 @@ import { Database } from "../../types";
 import { supabase } from "../../utils";
 
 export const useUpdateWorkout = () => {
-  const navigate = useNavigate({ from: "/create-workout" });
+  const navigate = useNavigate({ from: "/workout/$id" });
   const queryClient = useQueryClient();
   const execute = async ({
     workout_name,
@@ -39,13 +39,15 @@ export const useUpdateWorkout = () => {
 
   return useMutation({
     mutationFn: (workout: Database["public"]["Tables"]["workout"]["Update"]) => execute(workout),
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
+      console.log("workout", id);
+
       toast.success("Workout updated!");
       setTimeout(() => {
         queryClient.invalidateQueries({
           queryKey: ["get_workouts"],
         });
-        navigate({ to: "/" });
+        navigate({ to: `/workout/${id}` as any });
       }, 200);
     },
   });
