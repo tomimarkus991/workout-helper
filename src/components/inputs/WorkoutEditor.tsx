@@ -74,7 +74,7 @@ export const WorkoutEditor = () => {
       validationSchema={isUpdatingWorkout ? YupSchemas.CreateWorkout : YupSchemas.CreateExercise}
       validateOnChange={false}
       validateOnBlur={false}
-      onSubmit={async (values, { setSubmitting, resetForm, setFieldValue }) => {
+      onSubmit={async (values, { setSubmitting, setFieldValue }) => {
         setSubmitting(true);
 
         if (isUpdatingWorkout) {
@@ -101,7 +101,12 @@ export const WorkoutEditor = () => {
               completeDurationExerciseOnEnd || workout?.complete_duration_exercise_on_end,
           });
 
-          resetForm();
+          for await (const [index, exercise] of exercises.entries()) {
+            await updateExercise({
+              id: exercise.exerciseId,
+              order: index + 1,
+            });
+          }
         } else {
           const {
             clearDuration,
@@ -109,25 +114,12 @@ export const WorkoutEditor = () => {
             clearRest,
             clearSets,
             reps,
-            order,
             rest,
             duration,
             sets,
             exercise,
+            exerciseId,
           } = values;
-
-          setFieldValue("order", values.exercises.length + 1);
-
-          const exerciseValuesWithOrder = {
-            exercise,
-            order: values.exercises.length + 1,
-            reps,
-            duration,
-            rest,
-            sets,
-          };
-
-          setFieldValue("exercises", [...values.exercises, exerciseValuesWithOrder]);
 
           setFieldValue("exercise", "");
 
@@ -146,28 +138,60 @@ export const WorkoutEditor = () => {
 
           if (isEditingExercise) {
             await updateExercise({
-              id: values.exerciseId,
-              exercise_name: exercise,
-              order,
-              reps: typeof reps === "string" ? 0 : reps,
-              sets,
-              rest: typeof rest === "string" ? 0 : rest,
-              duration: typeof duration === "string" ? 0 : duration,
-              workout_id: id,
-            });
-          } else {
-            const exerciseId = genUuid();
-
-            await createExercise({
               id: exerciseId,
               exercise_name: exercise,
-              order,
+              reps: typeof reps === "string" ? 0 : reps,
+              sets,
+              rest: typeof rest === "string" ? 0 : rest,
+              duration: typeof duration === "string" ? 0 : duration,
+            });
+
+            const exerciseIndex = values.exercises.findIndex(
+              __exercise => __exercise.exerciseId === exerciseId,
+            );
+
+            const updatedExercises = [...values.exercises];
+            updatedExercises[exerciseIndex] = {
+              exercise,
+              reps,
+              duration,
+              rest,
+              order: values.exercises[exerciseIndex].order,
+              sets,
+              exerciseId,
+              clearSets: false,
+              clearRest: false,
+              clearReps: false,
+              clearDuration: false,
+            };
+
+            setFieldValue("exercises", updatedExercises);
+
+            setFieldValue("exercise", "");
+            setFieldValue("sets", "");
+            setFieldValue("reps", "");
+            setFieldValue("rest", "");
+            setFieldValue("duration", "");
+          } else {
+            const _exerciseId = genUuid();
+
+            setFieldValue("exerciseId", _exerciseId);
+
+            await createExercise({
+              id: _exerciseId,
+              exercise_name: exercise,
+              order: values.exercises.length + 1,
               reps: typeof reps === "string" ? 0 : reps,
               sets,
               rest: typeof rest === "string" ? 0 : rest,
               duration: typeof duration === "string" ? 0 : duration,
               workout_id: id,
             });
+
+            setFieldValue("exercises", [
+              ...values.exercises,
+              { exercise, reps, duration, rest, sets, exerciseId: _exerciseId },
+            ]);
           }
         }
 
@@ -198,14 +222,15 @@ export const WorkoutEditor = () => {
                 {values.exercises?.map(exercise => {
                   return (
                     <FormikExerciseCard
-                      key={exercise.exercise}
+                      key={exercise.exerciseId}
                       duration={exercise.duration}
                       sets={exercise.sets}
                       reps={exercise.reps}
                       rest={exercise.rest}
                       name={exercise.exercise}
-                      order={exercise.order}
                       setIsEditingExercise={setIsEditingExercise}
+                      workoutId={id}
+                      exerciseId={exercise.exerciseId}
                     />
                   );
                 })}
@@ -274,6 +299,7 @@ export const WorkoutEditor = () => {
             </div>
             <div className="flex justify-center mt-auto mb-3">
               <RealButton
+                className="mt-4"
                 variant="blue"
                 type="submit"
                 onClick={() => {

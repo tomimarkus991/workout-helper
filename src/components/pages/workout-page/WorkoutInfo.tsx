@@ -51,7 +51,6 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 reps={exercise.reps}
                 rest={exercise.rest}
                 name={exercise.exercise_name}
-                order={exercise.order}
               />
             );
           })}

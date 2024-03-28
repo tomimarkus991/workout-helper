@@ -100,7 +100,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         });
       }, 1000);
     } else {
-      clearInterval(interval);
+      return () => clearInterval(interval);
     }
 
     return () => clearInterval(interval);
@@ -117,6 +117,8 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
     if (isWorkoutFinished) {
       stopSound("ending");
+      // @ts-ignore
+      clearInterval(interval);
 
       createWorkoutStatistic({
         workout_id: workout?.id || "",

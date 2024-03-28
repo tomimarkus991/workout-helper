@@ -171,7 +171,6 @@ export const WorkoutCreator = () => {
                       reps={exercise.reps}
                       rest={exercise.rest}
                       name={exercise.exercise}
-                      order={exercise.order}
                       setIsEditingExercise={setIsEditingExercise}
                     />
                   );

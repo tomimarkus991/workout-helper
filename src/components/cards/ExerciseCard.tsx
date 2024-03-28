@@ -4,15 +4,18 @@ import { secondsToMinutes } from "date-fns";
 import { useField } from "formik";
 import { HiX } from "react-icons/hi";
 
+import { useDeleteAllWorkoutExercises } from "../../hooks/mutations/useDeleteAllWorkoutExercises";
+import { useDeleteExercise } from "../../hooks/mutations/useDeleteExercise";
+
 interface Props {
   sets: number;
   reps: number | string;
   rest: number;
   duration: number;
   name: string;
-  order: number | string;
   setIsEditingExercise?: (isEditingExercise: boolean) => void;
-  id?: string;
+  exerciseId?: string;
+  workoutId?: string;
 }
 
 export const ExerciseCard = ({ duration, reps, rest, sets, name }: Props) => {
@@ -42,9 +45,9 @@ export const FormikExerciseCard = ({
   reps,
   rest,
   duration,
-  order,
   setIsEditingExercise,
-  id,
+  exerciseId,
+  workoutId,
 }: Props) => {
   // @ts-ignore
   const [field, _, { setValue }] = useField("exercises");
@@ -56,22 +59,27 @@ export const FormikExerciseCard = ({
   const [__________, ___________, { setValue: setDurationValue }] = useField("duration");
   const [____________, _____________, { setValue: setExerciseId }] = useField("exerciseId");
 
+  const { mutate: deleteAllWorkoutExercises } = useDeleteAllWorkoutExercises();
+  const { mutate: deleteExercise } = useDeleteExercise();
+
   const handleCardClick = () => {
     setExerciseValue(name);
     setSetsValue(sets);
     setRepsValue(reps);
     setRestValue(rest);
     setDurationValue(duration);
-    setExerciseId(id);
+    setExerciseId(exerciseId);
 
     setIsEditingExercise && setIsEditingExercise(true);
   };
 
   return (
-    <div className="border border-blue-600 rounded-lg whitespace-nowrap">
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center p-2" onClick={handleCardClick}>
-          <p className="mr-2 text-zinc-500 opacity-90">{order}</p>
+    <div
+      key={exerciseId}
+      className="flex flex-row border border-blue-600 rounded-lg whitespace-nowrap"
+    >
+      <div className="flex flex-row items-center justify-between w-full" onClick={handleCardClick}>
+        <div className="flex flex-row items-center p-2">
           <p>{sets}x</p>
           <p>
             {(reps === 0 || reps === "") && duration > 0
@@ -82,17 +90,27 @@ export const FormikExerciseCard = ({
         </div>
         <div className="flex flex-row items-center justify-center">
           {rest < 60 ? <p>{rest}s rest</p> : <p>{secondsToMinutes(rest)}m rest</p>}
-          <HiX
-            className="ml-2 mr-1 size-8 icon"
-            onClick={() => {
-              if (field.value.length === 1) {
-                setValue([]);
-              } else {
-                setValue([...field.value.filter((exercise: any) => exercise.exercise !== name)]);
-              }
-            }}
-          />
         </div>
+      </div>
+
+      <div className="flex items-center justify-center">
+        <HiX
+          className="ml-2 mr-1 size-8 icon"
+          onClick={() => {
+            if (field.value.length === 1) {
+              setValue([]);
+
+              workoutId && deleteAllWorkoutExercises({ id: workoutId });
+            } else {
+              setValue([
+                ...field.value.filter(
+                  (exercise: { exerciseId: string }) => exercise.exerciseId !== exerciseId,
+                ),
+              ]);
+              exerciseId && deleteExercise({ id: exerciseId });
+            }
+          }}
+        />
       </div>
     </div>
   );
