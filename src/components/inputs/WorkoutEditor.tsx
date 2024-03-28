@@ -121,21 +121,6 @@ export const WorkoutEditor = () => {
             exerciseId,
           } = values;
 
-          setFieldValue("exercise", "");
-
-          if (clearSets) {
-            setFieldValue("sets", "");
-          }
-          if (clearRest) {
-            setFieldValue("rest", "");
-          }
-          if (clearReps) {
-            setFieldValue("reps", "");
-          }
-          if (clearDuration) {
-            setFieldValue("duration", "");
-          }
-
           if (isEditingExercise) {
             await updateExercise({
               id: exerciseId,
@@ -173,6 +158,11 @@ export const WorkoutEditor = () => {
             setFieldValue("rest", "");
             setFieldValue("duration", "");
           } else {
+            if (values.exercises.some(__exercise => __exercise.exercise === exercise)) {
+              toast.error("Exercise name has to be unique");
+              return;
+            }
+
             const _exerciseId = genUuid();
 
             setFieldValue("exerciseId", _exerciseId);
@@ -192,6 +182,21 @@ export const WorkoutEditor = () => {
               ...values.exercises,
               { exercise, reps, duration, rest, sets, exerciseId: _exerciseId },
             ]);
+          }
+
+          setFieldValue("exercise", "");
+
+          if (clearSets) {
+            setFieldValue("sets", "");
+          }
+          if (clearRest) {
+            setFieldValue("rest", "");
+          }
+          if (clearReps) {
+            setFieldValue("reps", "");
+          }
+          if (clearDuration) {
+            setFieldValue("duration", "");
           }
         }
 

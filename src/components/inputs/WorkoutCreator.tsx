@@ -24,11 +24,11 @@ export const WorkoutCreator = () => {
   const [isEditingExercise, setIsEditingExercise] = useState(false);
 
   const [initialValues] = useState<CreateWorkoutFormValues & ExerciseFormValues>({
-    exerciseId: "",
     name: "",
     completeDurationExerciseOnEnd: false,
     sequentialSets: true,
     exercises: [],
+    exerciseId: "",
     exercise: "",
     sets: "" as unknown as number,
     reps: "" as unknown as number,
@@ -113,14 +113,14 @@ export const WorkoutCreator = () => {
             duration,
             sets,
             exercise,
+            exerciseId,
+            exercises,
           } = values;
 
-          setFieldValue("order", values.exercises.length + 1);
-
-          setFieldValue("exercises", [
-            ...values.exercises,
-            { exercise, reps, duration, rest, sets },
-          ]);
+          if (exercises.some(__exercise => __exercise.exercise === exercise)) {
+            toast.error("Exercise name has to be unique");
+            return;
+          }
 
           setFieldValue("exercise", "");
 
@@ -135,6 +135,44 @@ export const WorkoutCreator = () => {
           }
           if (clearDuration) {
             setFieldValue("duration", "");
+          }
+
+          if (isEditingExercise) {
+            const exerciseIndex = values.exercises.findIndex(
+              __exercise => __exercise.exerciseId === exerciseId,
+            );
+
+            const updatedExercises = [...values.exercises];
+            updatedExercises[exerciseIndex] = {
+              exercise,
+              reps,
+              duration,
+              rest,
+              order: values.exercises[exerciseIndex].order,
+              sets,
+              exerciseId,
+              clearSets: false,
+              clearRest: false,
+              clearReps: false,
+              clearDuration: false,
+            };
+
+            setFieldValue("exercises", updatedExercises);
+
+            setFieldValue("exercise", "");
+            setFieldValue("sets", "");
+            setFieldValue("reps", "");
+            setFieldValue("rest", "");
+            setFieldValue("duration", "");
+          } else {
+            const _exerciseId = genUuid();
+
+            setFieldValue("exerciseId", _exerciseId);
+
+            setFieldValue("exercises", [
+              ...values.exercises,
+              { exercise, reps, duration, rest, sets, exerciseId: _exerciseId },
+            ]);
           }
         }
 
@@ -172,6 +210,8 @@ export const WorkoutCreator = () => {
                       rest={exercise.rest}
                       name={exercise.exercise}
                       setIsEditingExercise={setIsEditingExercise}
+                      exerciseId={exercise.exerciseId}
+                      creator
                     />
                   );
                 })}
@@ -242,6 +282,7 @@ export const WorkoutCreator = () => {
               <RealButton
                 variant="blue"
                 type="submit"
+                className="mt-4"
                 onClick={() => {
                   setIsCreatingWorkout(true);
                   if (isValid) {

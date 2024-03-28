@@ -16,6 +16,7 @@ interface Props {
   setIsEditingExercise?: (isEditingExercise: boolean) => void;
   exerciseId?: string;
   workoutId?: string;
+  creator?: boolean;
 }
 
 export const ExerciseCard = ({ duration, reps, rest, sets, name }: Props) => {
@@ -59,6 +60,7 @@ export const FormikExerciseCard = ({
   setIsEditingExercise,
   exerciseId,
   workoutId,
+  creator = false,
 }: Props) => {
   // @ts-ignore
   const [field, _, { setValue }] = useField("exercises");
@@ -118,7 +120,9 @@ export const FormikExerciseCard = ({
                   (exercise: { exerciseId: string }) => exercise.exerciseId !== exerciseId,
                 ),
               ]);
-              exerciseId && deleteExercise({ id: exerciseId });
+              if (exerciseId && !creator) {
+                deleteExercise({ id: exerciseId });
+              }
             }
           }}
         />
