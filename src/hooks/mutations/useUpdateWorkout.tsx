@@ -40,8 +40,6 @@ export const useUpdateWorkout = () => {
   return useMutation({
     mutationFn: (workout: Database["public"]["Tables"]["workout"]["Update"]) => execute(workout),
     onSuccess: (_, { id }) => {
-      console.log("workout", id);
-
       toast.success("Workout updated!");
       setTimeout(() => {
         queryClient.invalidateQueries({
