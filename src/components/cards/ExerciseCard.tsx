@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from "clsx";
-import { intervalToDuration, secondsToMinutes } from "date-fns";
+import { intervalToDuration } from "date-fns";
 import type { Identifier } from "dnd-core";
 import { useField } from "formik";
 import update from "immutability-helper";
@@ -49,7 +49,7 @@ export const ExerciseCard = ({ duration, reps, rest, sets, name }: Props) => {
             <p>{rest}s rest</p>
           ) : (
             <p>
-              {minutes}m {String(seconds).padStart(2, "0")}s rest
+              {minutes}m {seconds ? `${String(seconds).padStart(2, "0")}s` : ""} rest
             </p>
           )}
         </div>
@@ -100,6 +100,11 @@ export const FormikExerciseCard = ({
 
     setIsEditingExercise && setIsEditingExercise(true);
   };
+
+  const { minutes, seconds } = intervalToDuration({
+    start: 0,
+    end: rest * 1000,
+  });
 
   const handleExerciseMove = useCallback((dragIndex: number, hoverIndex: number) => {
     setWasSomethingDeletedOrMoved && setWasSomethingDeletedOrMoved(true);
@@ -210,7 +215,13 @@ export const FormikExerciseCard = ({
           <p className="ml-3 mr-2 whitespace-normal">{name}</p>
         </div>
         <div className="flex flex-row items-center justify-center">
-          {rest < 60 ? <p>{rest}s rest</p> : <p>{secondsToMinutes(rest)}m rest</p>}
+          {rest <= 60 ? (
+            <p>{rest}s rest</p>
+          ) : (
+            <p>
+              {minutes}m {seconds ? `${String(seconds).padStart(2, "0")}s` : ""} rest
+            </p>
+          )}
         </div>
       </div>
 
