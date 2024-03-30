@@ -2,7 +2,7 @@ import { Link, useParams } from "@tanstack/react-router";
 import { Form, Formik } from "formik";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { HiArrowLeft, HiTrash } from "react-icons/hi";
+import { HiArrowLeft, HiTrash, HiX } from "react-icons/hi";
 import { v4 as genUuid } from "uuid";
 
 import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "../../app-constants";
@@ -10,8 +10,10 @@ import { useCreateExercise, useDeleteWorkout, useGetWorkout } from "../../hooks"
 import { useUpdateExercise } from "../../hooks/mutations/useUpdateExercise";
 import { useUpdateWorkout } from "../../hooks/mutations/useUpdateWorkout";
 import { cn } from "../../lib";
+import { animations, AnimationWrapper } from "../animations";
 import { RealButton } from "../button";
 import { FormikExerciseCard } from "../cards";
+import { PopoverContent, Popover, PopoverClose, PopoverTrigger } from "../Popover";
 
 import { FormikInput } from "./FormikInput";
 import { FormikToggle } from "./FormikToggle";
@@ -210,7 +212,37 @@ export const WorkoutEditor = () => {
                 <HiArrowLeft className="icon" />
               </Link>
               <p className="text-3xl font-semibold text-center">Update Workout</p>
-              <HiTrash className="text-red-700 icon" onClick={() => deleteWorkout({ id })} />
+              <Popover>
+                <PopoverTrigger className="relative">
+                  <HiTrash className="text-red-700 icon" />
+                </PopoverTrigger>
+                <PopoverContent className="z-50 p-4 mt-5">
+                  <div className="flex flex-col">
+                    <div className="flex flex-row mb-4">
+                      <p className="max-w-[10rem] text-sm font-semibold">
+                        Are you sure you want to delete this workout?
+                      </p>
+                      <PopoverClose>
+                        <AnimationWrapper
+                          className="self-center ml-4 cursor-pointer"
+                          variants={animations.smallScaleXs}
+                        >
+                          <HiX className="self-center icon" />
+                        </AnimationWrapper>
+                      </PopoverClose>
+                    </div>
+                    <div className="flex flex-row items-center justify-center">
+                      <RealButton
+                        className="px-3 ml-4"
+                        variant="red"
+                        onClick={() => deleteWorkout({ id })}
+                      >
+                        Delete
+                      </RealButton>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="mb-5">
               <FormikInput name="name" placeholder="L-Sit" label="Workout name" />

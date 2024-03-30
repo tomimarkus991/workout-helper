@@ -4,7 +4,7 @@ import { forwardRef } from "react";
 import { cn } from "../../lib";
 
 export const realButtonVariantColors = {
-  red: ["text-white bg-primary border-[#b10000]", "active:border-primary"],
+  red: ["text-white bg-[#E50815] border-[#b10000]", "active:border-[##E50815"],
   orange: ["text-white bg-secondary border-[#b77515]", "active:border-secondary"],
   dark: [
     "bg-gray-700 text-[#f3f2f0] border-gray-900",
