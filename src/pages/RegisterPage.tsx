@@ -22,7 +22,7 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="mx-4 mt-5">
+    <div className="max-w-md mx-4 mt-5 md:mx-auto">
       <Formik
         initialValues={initialValues}
         validationSchema={YupSchemas.Register}
