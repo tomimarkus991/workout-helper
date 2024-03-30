@@ -19,10 +19,8 @@ export const useGetAllWorkoutsStats = () => {
       .from("workout_statistic")
       .select(
         `
-        *,
-        workout (
-          workout_name
-        )
+          *,
+          workout!inner (workout_name)
       `,
       )
       .eq("workout.profile_id", user?.session?.user.id as string)
