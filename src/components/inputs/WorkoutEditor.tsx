@@ -248,6 +248,11 @@ export const WorkoutEditor = () => {
                 <HiArrowLeft className="icon" />
               </Link>
             </div>
+            <img
+              src={`/workout/${workout?.image}`}
+              className="object-cover w-full h-40 aspect-auto rounded-xl"
+              alt="workout-img"
+            />
             <div className="mb-5">
               <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
               <FormikToggle name="sequentialSets" label="Finish one exercise's sets first" />
