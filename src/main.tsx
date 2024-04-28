@@ -1,5 +1,6 @@
 import "./index.css";
 
+import { App as CapacitorApp } from "@capacitor/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -32,6 +33,14 @@ import { supabase } from "./utils";
 const root = createRoot(document.getElementById("root") as HTMLElement);
 
 const queryClient = new QueryClient();
+
+CapacitorApp.addListener("backButton", ({ canGoBack }) => {
+  if (!canGoBack) {
+    CapacitorApp.exitApp();
+  } else {
+    window.history.back();
+  }
+});
 
 const RootComponent = () => {
   return (
