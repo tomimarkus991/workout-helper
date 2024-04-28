@@ -183,11 +183,11 @@ export const WorkoutCreator = () => {
         return (
           <Form className={cn("max-w-md mx-auto min-h-screen p-2 flex flex-col")}>
             <div className="flex flex-row items-center justify-between my-5">
+              <HiArrowLeft className="opacity-0 icon" />
+              <p className="text-3xl font-semibold text-center">Create Workout</p>
               <Link to="/">
                 <HiArrowLeft className="icon" />
               </Link>
-              <p className="text-3xl font-semibold text-center">Create Workout</p>
-              <HiArrowLeft className="opacity-0 icon" />
             </div>
             <div className="mb-5">
               <FormikInput name="name" placeholder="L-Sit" label="Workout name" />

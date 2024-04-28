@@ -208,10 +208,6 @@ export const WorkoutEditor = () => {
         return (
           <Form className={cn("max-w-md mx-auto min-h-screen p-2 flex flex-col")}>
             <div className="flex flex-row items-center justify-between my-5">
-              <Link to="/">
-                <HiArrowLeft className="icon" />
-              </Link>
-              <p className="text-3xl font-semibold text-center">Update Workout</p>
               <Popover>
                 <PopoverTrigger className="relative">
                   <HiTrash className="text-red-700 icon" />
@@ -243,6 +239,10 @@ export const WorkoutEditor = () => {
                   </div>
                 </PopoverContent>
               </Popover>
+              <p className="text-2xl font-semibold text-center">Update Workout</p>
+              <Link to="/">
+                <HiArrowLeft className="icon" />
+              </Link>
             </div>
             <div className="mb-5">
               <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
