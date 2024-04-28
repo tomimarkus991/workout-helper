@@ -22,6 +22,7 @@ export const useGetWorkouts = () => {
       `,
       )
       .eq("profile_id", user?.session?.user.id as string)
+      .eq("is_archived", false)
       .order("created_at", { ascending: true });
 
     if (error) {

@@ -2,18 +2,19 @@ import { Link, useParams } from "@tanstack/react-router";
 import { Form, Formik } from "formik";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { HiArrowLeft, HiTrash, HiX } from "react-icons/hi";
+import { HiArrowLeft } from "react-icons/hi";
+import { IoArchive } from "react-icons/io5";
 import { v4 as genUuid } from "uuid";
 
 import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "../../app-constants";
-import { useCreateExercise, useDeleteWorkout, useGetWorkout } from "../../hooks";
+import { useArchiveWorkout, useCreateExercise, useGetWorkout } from "../../hooks";
 import { useUpdateExercise } from "../../hooks/mutations/useUpdateExercise";
 import { useUpdateWorkout } from "../../hooks/mutations/useUpdateWorkout";
 import { cn } from "../../lib";
 import { animations, AnimationWrapper } from "../animations";
 import { RealButton } from "../button";
 import { FormikExerciseCard } from "../cards";
-import { PopoverContent, Popover, PopoverClose, PopoverTrigger } from "../Popover";
+import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "../Popover";
 
 import { FormikInput } from "./FormikInput";
 import { FormikToggle } from "./FormikToggle";
@@ -27,7 +28,7 @@ export const WorkoutEditor = () => {
     return <p>Workout not found</p>;
   }
 
-  const { mutate: deleteWorkout } = useDeleteWorkout();
+  const { mutate: archiveWorkout } = useArchiveWorkout();
 
   const { mutateAsync: updateWorkout } = useUpdateWorkout();
   const { mutateAsync: createExercise } = useCreateExercise();
@@ -207,34 +208,37 @@ export const WorkoutEditor = () => {
       {({ isValid, handleSubmit, values }) => {
         return (
           <Form className={cn("max-w-md mx-auto min-h-screen p-2 flex flex-col")}>
-            <div className="flex flex-row items-center justify-between my-5">
+            <div className="flex flex-row items-center justify-between mx-3 my-5">
               <Popover>
                 <PopoverTrigger className="relative">
-                  <HiTrash className="text-red-700 icon" />
+                  <IoArchive className="text-gray-400 size-8 icon" />
                 </PopoverTrigger>
                 <PopoverContent className="z-50 p-4 mt-5">
                   <div className="flex flex-col">
-                    <div className="flex flex-row mb-4">
-                      <p className="max-w-[10rem] text-sm font-semibold">
-                        Are you sure you want to delete this workout?
+                    <div className="flex flex-row mb-4 max-w-[11rem]">
+                      <p className="text-sm font-semibold text-center">
+                        Are you sure you want to archive this workout?
                       </p>
-                      <PopoverClose>
-                        <AnimationWrapper
-                          className="self-center ml-4 cursor-pointer"
-                          variants={animations.smallScaleXs}
-                        >
-                          <HiX className="self-center icon" />
-                        </AnimationWrapper>
-                      </PopoverClose>
                     </div>
                     <div className="flex flex-row items-center justify-center">
                       <RealButton
                         className="px-3 ml-4"
                         variant="red"
-                        onClick={() => deleteWorkout({ id })}
+                        onClick={() => archiveWorkout({ id })}
                       >
-                        Delete
+                        Archive
                       </RealButton>
+
+                      <PopoverClose>
+                        <AnimationWrapper
+                          className="self-center ml-4 cursor-pointer"
+                          variants={animations.smallScaleXs}
+                        >
+                          <RealButton className="px-3 ml-4" variant="blue">
+                            Cancel
+                          </RealButton>
+                        </AnimationWrapper>
+                      </PopoverClose>
                     </div>
                   </div>
                 </PopoverContent>

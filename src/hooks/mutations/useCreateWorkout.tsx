@@ -11,7 +11,6 @@ export const useCreateWorkout = () => {
   const execute = async ({
     workout_name,
     id,
-    average_completion_time,
     image,
     complete_duration_exercise_on_end,
     profile_id,
@@ -20,7 +19,6 @@ export const useCreateWorkout = () => {
     const res = await supabase.from("workout").insert({
       id,
       workout_name,
-      average_completion_time,
       complete_duration_exercise_on_end,
       image,
       profile_id,

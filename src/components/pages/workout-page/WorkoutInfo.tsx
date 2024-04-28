@@ -29,9 +29,7 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                 id,
               }}
             >
-              <p className="text-3xl font-semibold text-center underline">
-                {workout?.workout_name}
-              </p>
+              <p className="text-2xl font-semibold underline">{workout?.workout_name}</p>
             </Link>
           </AnimationWrapper>
         </div>

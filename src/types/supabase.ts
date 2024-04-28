@@ -81,36 +81,39 @@ export type Database = {
       };
       workout: {
         Row: {
-          average_completion_time: number | null;
           complete_duration_exercise_on_end: boolean;
           created_at: string | null;
           id: string;
           image: string | null;
+          is_archived: boolean;
           profile_id: string;
           sequential_sets: boolean;
           updated_at: string | null;
+          warmup: boolean;
           workout_name: string;
         };
         Insert: {
-          average_completion_time?: number | null;
           complete_duration_exercise_on_end?: boolean;
           created_at?: string | null;
           id: string;
           image?: string | null;
+          is_archived?: boolean;
           profile_id: string;
           sequential_sets?: boolean;
           updated_at?: string | null;
+          warmup?: boolean;
           workout_name: string;
         };
         Update: {
-          average_completion_time?: number | null;
           complete_duration_exercise_on_end?: boolean;
           created_at?: string | null;
           id?: string;
           image?: string | null;
+          is_archived?: boolean;
           profile_id?: string;
           sequential_sets?: boolean;
           updated_at?: string | null;
+          warmup?: boolean;
           workout_name?: string;
         };
         Relationships: [
@@ -125,21 +128,21 @@ export type Database = {
       };
       workout_statistic: {
         Row: {
-          completion_time: number | null;
+          completion_time: number;
           created_at: string;
-          id: number;
+          id: string;
           workout_id: string;
         };
         Insert: {
-          completion_time?: number | null;
+          completion_time: number;
           created_at?: string;
-          id?: number;
-          workout_id: string;
+          id?: string;
+          workout_id?: string;
         };
         Update: {
-          completion_time?: number | null;
+          completion_time?: number;
           created_at?: string;
-          id?: number;
+          id?: string;
           workout_id?: string;
         };
         Relationships: [

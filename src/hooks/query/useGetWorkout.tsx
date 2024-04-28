@@ -17,6 +17,7 @@ export const useGetWorkout = (workoutId: string) => {
     `,
       )
       .eq("id", workoutId)
+      .eq("is_archived", false)
       .order("order", { referencedTable: "exercise", ascending: true })
       .single();
 
