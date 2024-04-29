@@ -15,6 +15,7 @@
     "android:open": "ionic cap open android",
     "android:run": "ionic cap run android --target 9a6d1192",
     "android:run:u": "ionic cap run android --target S95PROEEA0000013070",
+    "android:run:u2": "ionic cap run android --target V300000000000018554",
     "build:app": "npm run build && npx cap sync",
     "ionic:build": "npm run build",
     "ionic:serve": "npm run start",

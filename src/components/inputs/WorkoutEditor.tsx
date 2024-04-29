@@ -1,5 +1,6 @@
-import { Link, useParams } from "@tanstack/react-router";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { Form, Formik } from "formik";
+import { Reorder } from "framer-motion";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiArrowLeft } from "react-icons/hi";
@@ -24,8 +25,11 @@ export const WorkoutEditor = () => {
 
   const { data: workout } = useGetWorkout(id);
 
+  const navigate = useNavigate();
+
   if (!workout) {
-    return <p>Workout not found</p>;
+    navigate({ to: "/workout/$id" });
+    return <></>;
   }
 
   const { mutate: archiveWorkout } = useArchiveWorkout();
@@ -36,7 +40,8 @@ export const WorkoutEditor = () => {
 
   const [isEditingExercise, setIsEditingExercise] = useState(false);
   const [isUpdatingWorkout, setIsUpdatingWorkout] = useState(false);
-  const [wasSomethingDeletedOrMoved, setWasSomethingDeletedOrMoved] = useState(false);
+  const [isReordering, setIsReordering] = useState(false);
+  const [wasReordered, setWasReordered] = useState(false);
 
   const [initialValues] = useState<CreateWorkoutFormValues & ExerciseFormValues>({
     name: workout.workout_name,
@@ -101,12 +106,9 @@ export const WorkoutEditor = () => {
               completeDurationExerciseOnEnd || workout?.complete_duration_exercise_on_end,
           });
 
-          if (wasSomethingDeletedOrMoved) {
-            for await (const [index, exercise] of exercises.entries()) {
-              await updateExercise({
-                id: exercise.exerciseId,
-                order: index + 1,
-              });
+          if (wasReordered) {
+            for (const [index, exercise] of values.exercises.entries()) {
+              updateExercise({ id: exercise.exerciseId, order: index + 1 });
             }
           }
         } else {
@@ -205,7 +207,7 @@ export const WorkoutEditor = () => {
         setSubmitting(false);
       }}
     >
-      {({ isValid, handleSubmit, values }) => {
+      {({ isValid, handleSubmit, values, setFieldValue }) => {
         return (
           <Form className={cn("max-w-md mx-auto min-h-screen p-2 flex flex-col")}>
             <div className="flex flex-row items-center justify-between mx-3 my-5">
@@ -262,26 +264,48 @@ export const WorkoutEditor = () => {
               />
             </div>
 
+            <div className="flex justify-center">
+              <RealButton
+                className="mb-2"
+                variant="blue"
+                onClick={() => setIsReordering(!isReordering)}
+              >
+                {isReordering ? "Stop reorder" : "Reorder exercises"}
+              </RealButton>
+            </div>
             <div className="flex flex-col space-y-2">
-              <div className="space-y-2">
-                {values.exercises?.map((exercise, index) => {
+              <Reorder.Group
+                className="space-y-1"
+                axis="y"
+                values={values.exercises}
+                onReorder={reorderValues => {
+                  setFieldValue("exercises", reorderValues);
+                  setWasReordered(true);
+                }}
+              >
+                {values.exercises?.map(exercise => {
                   return (
-                    <FormikExerciseCard
+                    <Reorder.Item
                       key={exercise.exerciseId}
-                      duration={exercise.duration}
-                      sets={exercise.sets}
-                      reps={exercise.reps}
-                      rest={exercise.rest}
-                      name={exercise.exercise}
-                      setIsEditingExercise={setIsEditingExercise}
-                      workoutId={id}
-                      exerciseId={exercise.exerciseId}
-                      index={index}
-                      setWasSomethingDeletedOrMoved={setWasSomethingDeletedOrMoved}
-                    />
+                      value={exercise}
+                      dragListener={isReordering ? true : false}
+                    >
+                      <FormikExerciseCard
+                        key={exercise.exerciseId}
+                        duration={exercise.duration}
+                        sets={exercise.sets}
+                        reps={exercise.reps}
+                        rest={exercise.rest}
+                        name={exercise.exercise}
+                        setIsEditingExercise={setIsEditingExercise}
+                        workoutId={id}
+                        exerciseId={exercise.exerciseId}
+                      />
+                    </Reorder.Item>
                   );
                 })}
-              </div>
+              </Reorder.Group>
+
               <FormikInput name="exercise" placeholder="Scapula shrugs" label="Exercise name" />
               <div className="flex flex-row justify-between mt-1 mb-2">
                 <div className="flex flex-row items-center justify-center space-x-2">
