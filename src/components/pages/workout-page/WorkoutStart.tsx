@@ -5,7 +5,8 @@ import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { HiX, HiOutlineVolumeUp, HiOutlineVolumeOff } from "react-icons/hi";
 
-import { useGetWorkout, useCreateWorkoutStatistic } from "../../../hooks";
+import { useGetWorkout, useCreateWorkoutStatistic, useUser } from "../../../hooks";
+import { cn } from "../../../lib";
 import { initSounds, playSound, setVolume, stopSound } from "../../../services/sound";
 import { formatTime } from "../../../utils/formatTime";
 import { RealButton } from "../../button";
@@ -22,6 +23,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { id } = useParams({ strict: false });
 
   const { data: workout, isLoading, error } = useGetWorkout(id);
+  const { data: user } = useUser();
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const { mutateAsync: createWorkoutStatistic, isPending } = useCreateWorkoutStatistic();
 
@@ -177,7 +179,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               </div>
             )}
             {currentExercise?.duration !== 0 && !isResting && (
-              <p className="z-10 mt-6 text-4xl font-bold font-number">
+              <p className="z-10 mt-6 text-6xl font-bold font-number">
                 {formatTime(exerciseCountdown)}
               </p>
             )}
@@ -186,14 +188,21 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
           {!isResting && (
             <div className="mt-4 mb-2 text-center sm:text-center">
               {currentExercise?.reps !== 0 && (
-                <p className="text-3xl font-bold">
+                <p className={cn("font-bold", user?.bigger_text ? "text-5xl" : "text-4xl")}>
                   {currentExercise?.reps === 999 ? "Max" : currentExercise?.reps} reps
                 </p>
               )}
-              <p className="max-w-xs mx-auto mt-4 text-3xl font-semibold sm:max-w-none sm:mx-auto">
+              <p
+                className={cn(
+                  "max-w-xs mx-auto mt-4 font-semibold sm:max-w-none sm:mx-auto",
+                  user?.bigger_text ? "text-5xl" : "text-4xl",
+                )}
+              >
                 {currentExercise?.exercise_name}
               </p>
-              <p className="mt-5 text-3xl font-semibold">Set {currentExercise?.sets}</p>
+              <p className={cn("mt-5 font-semibold", user?.bigger_text ? "text-5xl" : "text-4xl")}>
+                Set {currentExercise?.sets}
+              </p>
             </div>
           )}
         </div>
@@ -247,7 +256,14 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                   <>
                     {nextExercise ? (
                       <>
-                        <p className="text-2xl font-semibold">{nextExercise?.exercise_name}</p>
+                        <p
+                          className={cn(
+                            user?.bigger_text ? "text-4xl" : "text-2xl",
+                            "font-semibold",
+                          )}
+                        >
+                          {nextExercise?.exercise_name}
+                        </p>
                         {workout?.sequential_sets ? (
                           <div className="flex flex-row space-x-6">
                             <p className="text-xl text-gray-100">Set {nextExercise?.sets}</p>

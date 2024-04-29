@@ -8,4 +8,5 @@ export interface UserType {
   email: string;
   username: string;
   avatar: string;
+  bigger_text: boolean;
 }

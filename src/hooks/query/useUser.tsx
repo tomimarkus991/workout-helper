@@ -26,7 +26,8 @@ export const useUser = () => {
           `
           id,
           username,
-          avatar
+          avatar,
+          bigger_text
         `,
         )
         .eq("id", id)

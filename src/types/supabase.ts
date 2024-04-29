@@ -53,18 +53,21 @@ export type Database = {
       profile: {
         Row: {
           avatar: string | null;
+          bigger_text: boolean;
           id: string;
           updated_at: string | null;
           username: string | null;
         };
         Insert: {
           avatar?: string | null;
+          bigger_text?: boolean;
           id: string;
           updated_at?: string | null;
           username?: string | null;
         };
         Update: {
           avatar?: string | null;
+          bigger_text?: boolean;
           id?: string;
           updated_at?: string | null;
           username?: string | null;
