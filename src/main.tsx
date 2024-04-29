@@ -1,4 +1,5 @@
 import "./index.css";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import { App as CapacitorApp } from "@capacitor/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -16,6 +17,7 @@ import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "react-hot-toast";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 import {
   WorkoutsPage,
@@ -157,10 +159,12 @@ declare module "@tanstack/react-router" {
 root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <DndProvider backend={TouchBackend}>
-        <Toaster />
-        <RouterProvider router={router} />
-      </DndProvider>
+      <SkeletonTheme baseColor="#07142e" highlightColor="#0a2354">
+        <DndProvider backend={TouchBackend}>
+          <Toaster />
+          <RouterProvider router={router} />
+        </DndProvider>
+      </SkeletonTheme>
     </QueryClientProvider>
   </StrictMode>,
 );

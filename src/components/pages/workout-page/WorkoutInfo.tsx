@@ -2,6 +2,7 @@
 
 import { Link, useParams } from "@tanstack/react-router";
 import { HiArrowLeft } from "react-icons/hi";
+import Skeleton from "react-loading-skeleton";
 
 import { useGetWorkout } from "../../../hooks";
 import { AnimationWrapper, animations } from "../../animations";
@@ -16,7 +17,8 @@ interface Props {
 export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { id } = useParams({ strict: false });
 
-  const { data: workout } = useGetWorkout(id);
+  const { data: workout, isLoading } = useGetWorkout(id);
+  console.log(isLoading);
 
   return (
     <div className="flex flex-col max-w-md min-h-screen p-4 m-auto">
@@ -34,31 +36,39 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
           </AnimationWrapper>
         </div>
         <Link className="ml-auto" to="/">
-          <HiArrowLeft className="cursor-pointer size-7 fill-white hover:fill-gray-200" />
+          <HiArrowLeft className="icon" />
         </Link>
       </div>
-      <img
-        src={`/workout/${workout?.image}`}
-        className="object-cover w-full h-40 aspect-auto rounded-xl"
-        alt="workout-img"
-      />
+      {isLoading ? (
+        <Skeleton className="h-40" />
+      ) : (
+        <img
+          src={`/workout/${workout?.image}`}
+          className="object-cover w-full h-40 aspect-auto rounded-xl"
+          alt="workout-img"
+        />
+      )}
 
       <div>
         <p className="mt-6 mb-3 text-2xl font-semibold">Exercises</p>
-        <div className="space-y-2">
-          {workout?.exercise.map(exercise => {
-            return (
-              <ExerciseCard
-                key={exercise.id}
-                duration={exercise.duration}
-                sets={exercise.sets}
-                reps={exercise.reps}
-                rest={exercise.rest}
-                name={exercise.exercise_name}
-              />
-            );
-          })}
-        </div>
+        {isLoading ? (
+          <Skeleton className="h-12" />
+        ) : (
+          <div className="space-y-2">
+            {workout?.exercise.map(exercise => {
+              return (
+                <ExerciseCard
+                  key={exercise.id}
+                  duration={exercise.duration}
+                  sets={exercise.sets}
+                  reps={exercise.reps}
+                  rest={exercise.rest}
+                  name={exercise.exercise_name}
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
       <div className="mx-auto mt-auto">
         <RealButton

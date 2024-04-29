@@ -5,6 +5,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiArrowLeft, HiRefresh } from "react-icons/hi";
 import { IoArchive } from "react-icons/io5";
+import Skeleton from "react-loading-skeleton";
 import { v4 as genUuid } from "uuid";
 
 import { CreateWorkoutFormValues, ExerciseFormValues, YupSchemas } from "../../app-constants";
@@ -23,7 +24,7 @@ import { FormikToggle } from "./FormikToggle";
 export const WorkoutEditor = () => {
   const { id } = useParams({ strict: false });
 
-  const { data: workout } = useGetWorkout(id);
+  const { data: workout, isLoading } = useGetWorkout(id);
 
   const navigate = useNavigate();
 
@@ -211,7 +212,7 @@ export const WorkoutEditor = () => {
     >
       {({ isValid, handleSubmit, values, setFieldValue }) => {
         return (
-          <Form className={cn("max-w-md mx-auto min-h-screen p-2 flex flex-col")}>
+          <Form className={cn("max-w-md mx-auto min-h-screen p-4 flex flex-col")}>
             <div className="flex flex-row items-center justify-between mx-3 my-5">
               <Popover>
                 <PopoverTrigger className="relative">
@@ -248,16 +249,20 @@ export const WorkoutEditor = () => {
                 </PopoverContent>
               </Popover>
               <p className="text-2xl font-semibold text-center">Update Workout</p>
-              <Link to="/">
+              <Link to="/workout/$id">
                 <HiArrowLeft className="icon" />
               </Link>
             </div>
             <div className="relative">
-              <img
-                src={`/workout/${randomizedImage}`}
-                className="object-cover w-full h-40 aspect-auto rounded-xl"
-                alt="workout-img"
-              />
+              {isLoading ? (
+                <Skeleton className="h-40" />
+              ) : (
+                <img
+                  src={`/workout/${randomizedImage}`}
+                  className="object-cover w-full h-40 aspect-auto rounded-xl"
+                  alt="workout-img"
+                />
+              )}
               <div className="absolute top-2 right-2">
                 <RealButton
                   variant="blue"
