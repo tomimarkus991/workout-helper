@@ -232,7 +232,9 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               <div className="ml-4">
                 {isResting ? (
                   <>
-                    <p className="text-2xl font-semibold">{currentExercise?.exercise_name}</p>
+                    <p className={cn(user?.bigger_text ? "text-4xl" : "text-2xl", "font-semibold")}>
+                      {currentExercise?.exercise_name}
+                    </p>
                     {workout?.sequential_sets ? (
                       <div className="flex flex-row space-x-6">
                         <p className="text-xl text-gray-100">Set {currentExercise?.sets}</p>
