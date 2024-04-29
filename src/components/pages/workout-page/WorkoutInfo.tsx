@@ -20,30 +20,29 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
   return (
     <div className="flex flex-col max-w-md min-h-screen p-4 m-auto">
-      <div className="relative mb-40">
-        <img
-          src={`/workout/${workout?.image}`}
-          className="absolute top-0 left-0 object-cover w-full h-40 aspect-auto rounded-xl"
-          alt="workout-img"
-        />
-        <div className="absolute top-6 left-5 flex flex-row items-center w-[80%] ml-3">
-          <div className="mr-4">
-            <AnimationWrapper variants={animations.smallScale}>
-              <Link
-                to="/update-workout/$id"
-                params={{
-                  id,
-                }}
-              >
-                <p className="text-2xl font-semibold underline">{workout?.workout_name}</p>
-              </Link>
-            </AnimationWrapper>
-          </div>
-          <Link className="ml-auto" to="/">
-            <HiArrowLeft className="cursor-pointer size-7 fill-white hover:fill-gray-200" />
-          </Link>
+      <div className="flex flex-row items-center my-4 mx-7">
+        <div className="mr-4">
+          <AnimationWrapper variants={animations.smallScale}>
+            <Link
+              to="/update-workout/$id"
+              params={{
+                id,
+              }}
+            >
+              <p className="text-2xl font-semibold underline">{workout?.workout_name}</p>
+            </Link>
+          </AnimationWrapper>
         </div>
+        <Link className="ml-auto" to="/">
+          <HiArrowLeft className="cursor-pointer size-7 fill-white hover:fill-gray-200" />
+        </Link>
       </div>
+      <img
+        src={`/workout/${workout?.image}`}
+        className="object-cover w-full h-40 aspect-auto rounded-xl"
+        alt="workout-img"
+      />
+
       <div>
         <p className="mt-6 mb-3 text-2xl font-semibold">Exercises</p>
         <div className="space-y-2">
