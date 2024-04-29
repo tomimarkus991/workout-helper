@@ -18,7 +18,6 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const { id } = useParams({ strict: false });
 
   const { data: workout, isLoading } = useGetWorkout(id);
-  console.log(isLoading);
 
   return (
     <div className="flex flex-col max-w-md min-h-screen p-4 m-auto">

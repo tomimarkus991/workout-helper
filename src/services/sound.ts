@@ -28,7 +28,6 @@ export const setVolume = (volume = 100): void => {
 };
 
 export const pauseSound = async (sound: SoundName) => {
-  // console.log('pause', sound)
   if (isPlatform("capacitor")) {
     await NativeAudio.stop({
       assetId: sound,
@@ -39,14 +38,12 @@ export const pauseSound = async (sound: SoundName) => {
 };
 
 export const stopSound = async (sound: SoundName) => {
-  // console.log('stop', sound)
   await pauseSound(sound);
   sounds[sound].currentTime = 0;
   sounds[sound].loop = false;
 };
 
 export const loopSound = async (sound: SoundName) => {
-  // console.log('loop', sound)
   if (isPlatform("capacitor")) {
     await NativeAudio.loop({
       assetId: sound,
