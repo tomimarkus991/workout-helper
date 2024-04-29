@@ -10,7 +10,7 @@ type WorkoutStatistics = {
 
 const calculateAverageWorkoutCompletionTime = (workoutStatistics: WorkoutStatistics[]) => {
   if (!Array.isArray(workoutStatistics) || workoutStatistics.length === 0) {
-    return 0; // or handle the case appropriately
+    return "";
   }
 
   const totalCompletionTime = workoutStatistics.reduce(
@@ -21,7 +21,14 @@ const calculateAverageWorkoutCompletionTime = (workoutStatistics: WorkoutStatist
   const averageCompletionTimeInSeconds = totalCompletionTime / workoutStatistics.length;
   const averageCompletionTimeInMinutes = averageCompletionTimeInSeconds / 60;
 
-  return Math.round(averageCompletionTimeInMinutes) || 0;
+  if (Math.floor(averageCompletionTimeInMinutes) < 10) {
+    return `${Math.floor(averageCompletionTimeInMinutes)}:${Math.round(
+      averageCompletionTimeInSeconds % 60,
+    )
+      .toString()
+      .padStart(2, "0")}`;
+  }
+  return `${Math.floor(averageCompletionTimeInMinutes)}m`;
 };
 
 export const WorkoutsPage = () => {

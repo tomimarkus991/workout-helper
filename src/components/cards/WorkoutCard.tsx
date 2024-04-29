@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 
 import { Workout } from "../../app-constants";
 
-type Props = Pick<Workout, "id" | "name" | "image"> & { averageCompletionTime: number };
+type Props = Pick<Workout, "id" | "name" | "image"> & { averageCompletionTime: string };
 
 export const WorkoutCard = ({ id, averageCompletionTime, name, image }: Props) => (
   <Link
@@ -21,7 +21,7 @@ export const WorkoutCard = ({ id, averageCompletionTime, name, image }: Props) =
         <p className="text-xl font-bold text-slate-800">{name}</p>
       </div>
       <div className="absolute px-4 py-2 bg-white rounded bottom-4 left-4 bg-opacity-70">
-        <p className="text-lg font-medium text-slate-800">{averageCompletionTime}m</p>
+        <p className="text-lg font-medium text-slate-800">{averageCompletionTime}</p>
       </div>
     </div>
   </Link>
