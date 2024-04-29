@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { Reorder } from "framer-motion";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { HiArrowLeft } from "react-icons/hi";
+import { HiArrowLeft, HiRefresh } from "react-icons/hi";
 import { IoArchive } from "react-icons/io5";
 import { v4 as genUuid } from "uuid";
 
@@ -42,6 +42,7 @@ export const WorkoutEditor = () => {
   const [isUpdatingWorkout, setIsUpdatingWorkout] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
   const [wasReordered, setWasReordered] = useState(false);
+  const [randomizedImage, setRandomizedImage] = useState(workout.image);
 
   const [initialValues] = useState<CreateWorkoutFormValues & ExerciseFormValues>({
     name: workout.workout_name,
@@ -104,6 +105,7 @@ export const WorkoutEditor = () => {
             sequential_sets: sequentialSets,
             complete_duration_exercise_on_end:
               completeDurationExerciseOnEnd || workout?.complete_duration_exercise_on_end,
+            image: randomizedImage,
           });
 
           if (wasReordered) {
@@ -250,11 +252,23 @@ export const WorkoutEditor = () => {
                 <HiArrowLeft className="icon" />
               </Link>
             </div>
-            <img
-              src={`/workout/${workout?.image}`}
-              className="object-cover w-full h-40 aspect-auto rounded-xl"
-              alt="workout-img"
-            />
+            <div className="relative">
+              <img
+                src={`/workout/${randomizedImage}`}
+                className="object-cover w-full h-40 aspect-auto rounded-xl"
+                alt="workout-img"
+              />
+              <div className="absolute top-2 right-2">
+                <RealButton
+                  variant="blue"
+                  size="icon"
+                  className="p-2"
+                  onClick={() => setRandomizedImage(`${Math.floor(Math.random() * 11) + 1}w.jpg`)}
+                >
+                  <HiRefresh className="text-white size-5" />
+                </RealButton>
+              </div>
+            </div>
             <div className="mb-5">
               <FormikInput name="name" placeholder="L-Sit" label="Workout name" />
               <FormikToggle name="sequentialSets" label="Finish one exercise's sets first" />
