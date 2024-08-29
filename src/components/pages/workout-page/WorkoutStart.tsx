@@ -66,11 +66,14 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
       interval = setInterval(() => {
         setRestCountdown(countdown => {
           if (countdown > 1) {
-            if (countdown === 6 && isAudioEnabled) playSound("ending");
+            if (countdown === 3 && isAudioEnabled) playSound("ending");
             return countdown - 1;
           }
 
-          if (countdown === 1 && isAudioEnabled) playSound("complete");
+          if (countdown === 1 && isAudioEnabled) {
+            stopSound("ending");
+            playSound("complete");
+          }
           setIsResting(false);
           clearInterval(interval);
           return 0;
@@ -100,11 +103,14 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
       interval = setInterval(() => {
         setExerciseCountdown(countdown => {
           if (countdown > 1) {
-            if (countdown === 6 && isAudioEnabled) playSound("ending");
+            if (countdown === 3 && isAudioEnabled) playSound("ending");
             return countdown - 1;
           }
 
-          if (countdown === 1 && isAudioEnabled) playSound("complete");
+          if (countdown === 1 && isAudioEnabled) {
+            stopSound("ending");
+            playSound("complete");
+          }
 
           if (workout?.complete_duration_exercise_on_end && nextExercise) {
             handleCompleteExercise();
