@@ -35,12 +35,27 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
   // this counts down rest periods
   const [restCountdown, setRestCountdown] = useState(0);
+
   const [exerciseCountdown, setExerciseCountdown] = useState(0);
   const [totalWorkoutTime, setTotalWorkoutTime] = useState(0);
+
+  const [startCountdown, setStartCountdown] = useState(4);
 
   const previousExercise = workout?.modifiedExercises[currentExerciseIndex - 1];
   const currentExercise = workout?.modifiedExercises[currentExerciseIndex];
   const nextExercise = workout?.modifiedExercises[currentExerciseIndex + 1];
+
+  useEffect(() => {
+    let interval: any;
+
+    if (startCountdown > 0) {
+      interval = setInterval(() => {
+        setStartCountdown(prev => prev - 1);
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [startCountdown]);
 
   useEffect(() => {
     let interval: any;
@@ -130,6 +145,14 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
     return () => clearInterval(interval);
   }, [isWorkingOut, isWorkoutFinished]);
+
+  if (startCountdown > 0) {
+    return (
+      <div className="text-6xl text-center mt-72">
+        {startCountdown === 1 ? <p>GO!</p> : <p>{startCountdown - 1}</p>}
+      </div>
+    );
+  }
 
   if (error?.message) {
     navigate({ to: "/" });
