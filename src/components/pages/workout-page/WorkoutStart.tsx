@@ -40,6 +40,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const [totalWorkoutTime, setTotalWorkoutTime] = useState(0);
 
   const [startCountdown, setStartCountdown] = useState(4);
+  const [isStartCountdownFinished, setIsStartCountdownFinished] = useState(false);
 
   const previousExercise = workout?.modifiedExercises[currentExerciseIndex - 1];
   const currentExercise = workout?.modifiedExercises[currentExerciseIndex];
@@ -52,6 +53,11 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
       interval = setInterval(() => {
         setStartCountdown(prev => prev - 1);
       }, 1000);
+    }
+
+    if (startCountdown === 0) {
+      setIsStartCountdownFinished(true);
+      clearInterval(interval);
     }
 
     return () => clearInterval(interval);
@@ -97,64 +103,68 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   useEffect(() => {
     let interval: any;
 
-    if (currentExercise?.duration !== 0 && !isResting) {
-      setExerciseCountdown(currentExercise?.duration || 0);
+    if (isStartCountdownFinished) {
+      if (currentExercise?.duration !== 0 && !isResting) {
+        setExerciseCountdown(currentExercise?.duration || 0);
 
-      interval = setInterval(() => {
-        setExerciseCountdown(countdown => {
-          if (countdown > 1) {
-            if (countdown === 3 && isAudioEnabled) playSound("ending");
-            return countdown - 1;
-          }
+        interval = setInterval(() => {
+          setExerciseCountdown(countdown => {
+            if (countdown > 1) {
+              if (countdown === 3 && isAudioEnabled) playSound("ending");
+              return countdown - 1;
+            }
 
-          if (countdown === 1 && isAudioEnabled) {
-            stopSound("ending");
-            playSound("complete");
-          }
+            if (countdown === 1 && isAudioEnabled) {
+              stopSound("ending");
+              playSound("complete");
+            }
 
-          if (workout?.complete_duration_exercise_on_end && nextExercise) {
-            handleCompleteExercise();
-          }
+            if (workout?.complete_duration_exercise_on_end && nextExercise) {
+              handleCompleteExercise();
+            }
 
-          if (!nextExercise) {
-            setIsWorkoutFinished(true);
-          }
-          return 0;
-        });
-      }, 1000);
+            if (!nextExercise) {
+              setIsWorkoutFinished(true);
+            }
+            return 0;
+          });
+        }, 1000);
+      }
     } else {
       return () => clearInterval(interval);
     }
 
     return () => clearInterval(interval);
-  }, [currentExercise?.duration, isResting, isAudioEnabled]);
+  }, [currentExercise?.duration, isResting, isAudioEnabled, isStartCountdownFinished]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    if (isWorkingOut && !isWorkoutFinished) {
-      interval = setInterval(() => {
-        setTotalWorkoutTime(prev => prev + 1);
-      }, 1000);
-    }
+    if (isStartCountdownFinished) {
+      if (isWorkingOut && !isWorkoutFinished) {
+        interval = setInterval(() => {
+          setTotalWorkoutTime(prev => prev + 1);
+        }, 1000);
+      }
 
-    if (isWorkoutFinished) {
-      stopSound("ending");
-      // @ts-ignore
-      clearInterval(interval);
+      if (isWorkoutFinished) {
+        stopSound("ending");
+        // @ts-ignore
+        clearInterval(interval);
 
-      createWorkoutStatistic({
-        workout_id: workout?.id || "",
-        completion_time: totalWorkoutTime,
-      });
+        createWorkoutStatistic({
+          workout_id: workout?.id || "",
+          completion_time: totalWorkoutTime,
+        });
+      }
     }
 
     return () => clearInterval(interval);
-  }, [isWorkingOut, isWorkoutFinished]);
+  }, [isWorkingOut, isWorkoutFinished, isStartCountdownFinished]);
 
   if (startCountdown > 0) {
     return (
-      <div className="text-6xl text-center mt-72">
+      <div className="font-bold text-center text-8xl mt-72">
         {startCountdown === 1 ? <p>GO!</p> : <p>{startCountdown - 1}</p>}
       </div>
     );
