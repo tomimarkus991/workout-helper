@@ -6,19 +6,25 @@ import { useGetWorkouts, useUser } from "../hooks";
 
 type WorkoutStatistics = {
   completion_time: number | null;
+  created_at: string;
 };
 
 const calculateAverageWorkoutCompletionTime = (workoutStatistics: WorkoutStatistics[]) => {
+  const workoutStatisticsToUse = workoutStatistics.slice(
+    workoutStatistics.length - 3,
+    workoutStatistics.length,
+  );
+
   if (!Array.isArray(workoutStatistics) || workoutStatistics.length === 0) {
     return "";
   }
 
-  const totalCompletionTime = workoutStatistics.reduce(
+  const totalCompletionTime = workoutStatisticsToUse.reduce(
     (accumulator, currentStatistic) => accumulator + (currentStatistic.completion_time || 0),
     0,
   );
 
-  const averageCompletionTimeInSeconds = totalCompletionTime / workoutStatistics.length;
+  const averageCompletionTimeInSeconds = totalCompletionTime / workoutStatisticsToUse.length;
   const averageCompletionTimeInMinutes = averageCompletionTimeInSeconds / 60;
 
   if (Math.floor(averageCompletionTimeInMinutes) < 10) {

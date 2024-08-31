@@ -17,7 +17,8 @@ export const useGetWorkouts = () => {
         `
       *,
       workout_statistic (
-        completion_time
+        completion_time,
+        created_at
       )
       `,
       )
