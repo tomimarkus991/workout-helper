@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import { IonSpinner } from "@ionic/react";
@@ -42,10 +43,13 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
   const [startCountdown, setStartCountdown] = useState(4);
   const [isStartCountdownFinished, setIsStartCountdownFinished] = useState(false);
 
+  const [isPaused, setIsPaused] = useState(false);
+
   const previousExercise = workout?.modifiedExercises[currentExerciseIndex - 1];
   const currentExercise = workout?.modifiedExercises[currentExerciseIndex];
   const nextExercise = workout?.modifiedExercises[currentExerciseIndex + 1];
 
+  // COUNTDOWN in the start
   useEffect(() => {
     let interval: any;
 
@@ -63,6 +67,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     return () => clearInterval(interval);
   }, [startCountdown]);
 
+  // COUNTDOWN for rest
   useEffect(() => {
     let interval: any;
 
@@ -71,24 +76,27 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
       interval = setInterval(() => {
         setRestCountdown(countdown => {
-          if (countdown > 1) {
-            if (countdown === 3 && isAudioEnabled) playSound("ending");
-            return countdown - 1;
-          }
+          if (!isPaused) {
+            if (countdown > 1) {
+              if (countdown === 3 && isAudioEnabled) playSound("ending");
+              return countdown - 1;
+            }
 
-          if (countdown === 1 && isAudioEnabled) {
-            stopSound("ending");
-            playSound("complete");
+            if (countdown === 1 && isAudioEnabled) {
+              stopSound("ending");
+              playSound("complete");
+            }
+            setIsResting(false);
+            clearInterval(interval);
+            return 0;
           }
-          setIsResting(false);
-          clearInterval(interval);
-          return 0;
+          return countdown;
         });
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [isResting, isAudioEnabled]);
+  }, [isResting, isAudioEnabled, isPaused]);
 
   const handleCompleteExercise = () => {
     const nextIndex = currentExerciseIndex + 1;
@@ -100,6 +108,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     setIsResting(true);
   };
 
+  // COUNTDOWN for exercise
   useEffect(() => {
     let interval: any;
 
@@ -109,24 +118,27 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
         interval = setInterval(() => {
           setExerciseCountdown(countdown => {
-            if (countdown > 1) {
-              if (countdown === 3 && isAudioEnabled) playSound("ending");
-              return countdown - 1;
-            }
+            if (!isPaused) {
+              if (countdown > 1) {
+                if (countdown === 3 && isAudioEnabled) playSound("ending");
+                return countdown - 1;
+              }
 
-            if (countdown === 1 && isAudioEnabled) {
-              stopSound("ending");
-              playSound("complete");
-            }
+              if (countdown === 1 && isAudioEnabled) {
+                stopSound("ending");
+                playSound("complete");
+              }
 
-            if (workout?.complete_duration_exercise_on_end && nextExercise) {
-              handleCompleteExercise();
-            }
+              if (workout?.complete_duration_exercise_on_end && nextExercise) {
+                handleCompleteExercise();
+              }
 
-            if (!nextExercise) {
-              setIsWorkoutFinished(true);
+              if (!nextExercise) {
+                setIsWorkoutFinished(true);
+              }
+              return 0;
             }
-            return 0;
+            return countdown;
           });
         }, 1000);
       }
@@ -135,7 +147,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     }
 
     return () => clearInterval(interval);
-  }, [currentExercise?.duration, isResting, isAudioEnabled, isStartCountdownFinished]);
+  }, [currentExercise?.duration, isResting, isAudioEnabled, isStartCountdownFinished, isPaused]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -143,7 +155,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     if (isStartCountdownFinished) {
       if (isWorkingOut && !isWorkoutFinished) {
         interval = setInterval(() => {
-          setTotalWorkoutTime(prev => prev + 1);
+          setTotalWorkoutTime(prev => (isPaused ? prev : prev + 1));
         }, 1000);
       }
 
@@ -160,7 +172,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
     }
 
     return () => clearInterval(interval);
-  }, [isWorkingOut, isWorkoutFinished, isStartCountdownFinished]);
+  }, [isWorkingOut, isWorkoutFinished, isStartCountdownFinished, isPaused]);
 
   if (startCountdown > 0) {
     return (
@@ -214,11 +226,19 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
             {isResting && (
               <div>
                 <p className="mt-32 text-5xl font-semibold">Resting</p>
-                <p className="mt-6 text-6xl font-bold font-number">{formatTime(restCountdown)}</p>
+                <p
+                  className="mt-6 text-6xl font-bold font-number"
+                  onClick={() => setIsPaused(prev => !prev)}
+                >
+                  {formatTime(restCountdown)}
+                </p>
               </div>
             )}
             {currentExercise?.duration !== 0 && !isResting && (
-              <p className="z-10 mt-6 text-6xl font-bold font-number">
+              <p
+                className="z-10 mt-6 text-6xl font-bold font-number"
+                onClick={() => setIsPaused(prev => !prev)}
+              >
                 {formatTime(exerciseCountdown)}
               </p>
             )}
