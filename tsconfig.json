@@ -3,6 +3,14 @@
   "compilerOptions": {
     "baseUrl": "./src",
   },
-  "include": ["src", "**/*.ts", "**/*.tsx", "vite.config.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src",
+    "**/*.ts",
+    "**/*.tsx",
+    "vite.config.ts",
+    "OneSignalSDKWorker.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
