@@ -3,3 +3,7 @@ extends:
 
 rules:
   arrow-body-style: off
+
+# ignore public/OneSignalSDKWorker.js
+ignorePatterns:
+  - public/OneSignalSDKWorker.js
