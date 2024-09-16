@@ -14,6 +14,7 @@
     "coverage": "vitest run --coverage",
     "android:open": "ionic cap open android",
     "android:run": "ionic cap run android --target 9a6d1192",
+    "android:run:tablet": "ionic cap run android --target R52TB0JT07P",
     "android:run:urmas": "ionic cap run android --target S95PROEEA0000013070",
     "android:run:urmas2": "ionic cap run android --target V300000000000018554",
     "build:app": "npm run build && npx cap sync",
