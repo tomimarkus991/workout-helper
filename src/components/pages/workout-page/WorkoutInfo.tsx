@@ -12,9 +12,10 @@ import { ExerciseCard } from "../../cards";
 interface Props {
   isWorkingOut: boolean;
   setIsWorkingOut: (isWorkingOut: boolean) => void;
+  setWorkoutSpeed: (workoutSpeed: number) => void;
 }
 
-export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
+export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut, setWorkoutSpeed }: Props) => {
   const { id } = useParams({ strict: false });
 
   const { data: workout, isLoading } = useGetWorkout(id);
@@ -48,6 +49,53 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
         />
       )}
 
+      <div className="mx-auto mt-auto">
+        <RealButton
+          className="mt-4"
+          variant="blue"
+          size="lg"
+          onClick={() => setIsWorkingOut(!isWorkingOut)}
+        >
+          Start workout
+        </RealButton>
+      </div>
+
+      <div className="mx-auto mt-auto">
+        <RealButton
+          className="mt-4 mr-3"
+          variant="blue"
+          size="lg"
+          onClick={() => {
+            setIsWorkingOut(!isWorkingOut);
+            setWorkoutSpeed(2);
+          }}
+        >
+          2x
+        </RealButton>
+        <RealButton
+          className="mt-4 mr-3"
+          variant="blue"
+          size="lg"
+          onClick={() => {
+            setIsWorkingOut(!isWorkingOut);
+            setWorkoutSpeed(3);
+          }}
+        >
+          3x
+        </RealButton>
+        <RealButton
+          className="mt-4"
+          variant="blue"
+          size="lg"
+          onClick={() => {
+            setIsWorkingOut(!isWorkingOut);
+            setWorkoutSpeed(4);
+          }}
+        >
+          4x
+        </RealButton>
+      </div>
+
       <div>
         <p className="mt-6 mb-3 text-2xl font-semibold">Exercises</p>
         {isLoading ? (
@@ -68,16 +116,6 @@ export const WorkoutInfo = ({ isWorkingOut, setIsWorkingOut }: Props) => {
             })}
           </div>
         )}
-      </div>
-      <div className="mx-auto mt-auto">
-        <RealButton
-          className="mt-4"
-          variant="blue"
-          size="lg"
-          onClick={() => setIsWorkingOut(!isWorkingOut)}
-        >
-          Start workout
-        </RealButton>
       </div>
     </div>
   );

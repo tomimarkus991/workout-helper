@@ -15,12 +15,13 @@ import { RealButton } from "../../button";
 interface Props {
   isWorkingOut: boolean;
   setIsWorkingOut: (isWorkingOut: boolean) => void;
+  workoutSpeed: number;
 }
 
 initSounds();
 setVolume();
 
-export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
+export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut, workoutSpeed }: Props) => {
   const { id } = useParams({ strict: false });
 
   const { data: workout, isLoading, error } = useGetWorkout(id);
@@ -114,7 +115,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
 
     if (isStartCountdownFinished) {
       if (currentExercise?.duration !== 0 && !isResting) {
-        setExerciseCountdown(currentExercise?.duration || 0);
+        setExerciseCountdown((currentExercise?.duration || 0) / workoutSpeed);
 
         interval = setInterval(() => {
           setExerciseCountdown(countdown => {
@@ -254,7 +255,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
               <p
                 className={cn(
                   "max-w-xs mx-auto mt-4 font-semibold sm:max-w-none sm:mx-auto",
-                  user?.bigger_text ? "text-5xl" : "text-4xl",
+                  user?.bigger_text ? "text-5xl" : "text-4xl"
                 )}
               >
                 {currentExercise?.exercise_name}
@@ -320,7 +321,7 @@ export const WorkoutStart = ({ isWorkingOut, setIsWorkingOut }: Props) => {
                         <p
                           className={cn(
                             user?.bigger_text ? "text-4xl" : "text-2xl",
-                            "font-semibold",
+                            "font-semibold"
                           )}
                         >
                           {nextExercise?.exercise_name}
